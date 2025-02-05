@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=
+SOURCEFILES_QUOTED_IF_SPACED=main_fft.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=
-POSSIBLE_DEPFILES=
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main_fft.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/main_fft.o.d
 
 # Object Files
-OBJECTFILES=
+OBJECTFILES=${OBJECTDIR}/main_fft.o
 
 # Source Files
-SOURCEFILES=
+SOURCEFILES=main_fft.c
 
 
 
@@ -89,7 +89,19 @@ MP_LINKER_FILE_OPTION=,--script=p33EP32MC202.gld
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: compile
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+${OBJECTDIR}/main_fft.o: main_fft.c  .generated_files/flags/default/c5701cb1635d9abccea7e4016b4ee073342768ed .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/main_fft.o.d 
+	@${RM} ${OBJECTDIR}/main_fft.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  main_fft.c  -o ${OBJECTDIR}/main_fft.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/main_fft.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
+	
 else
+${OBJECTDIR}/main_fft.o: main_fft.c  .generated_files/flags/default/d7aa8f2074ec16b21addba7588659ad922c18fe0 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/main_fft.o.d 
+	@${RM} ${OBJECTDIR}/main_fft.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  main_fft.c  -o ${OBJECTDIR}/main_fft.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MP -MMD -MF "${OBJECTDIR}/main_fft.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"
+	
 endif
 
 # ------------------------------------------------------------------------------------
