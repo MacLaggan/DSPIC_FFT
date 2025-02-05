@@ -109,7 +109,7 @@ void setupADC(){
     
     //Setting ADC to Automatic Sampling
     AD1CON1bits.ASAM = 1; //Automatically sample
-    AD1CON1bits.SSRCG = 1; //Allowing hardware to clear SAMP bit
+    AD1CON1bits.SSRCG = 0; //Allowing hardware to clear SAMP bit
     AD1CON1bits.SSRC = 111; //Auto-convert sample. 
     
     //Channel Select
@@ -121,6 +121,10 @@ void setupADC(){
     AD1CON1bits.AD12B = 1; //Using 12-bit ADC
     
     AD1CON3bits.SAMC = 0x3; //time before auto sample x*TAD
+    
+    AD1CON4bits.ADDMAEN = 0; //No direct memory access (not required)
+    
+    AD1CON2bits.SMPI = 0b0000; //Interrupt after every sample and conversion
     
     AD1CON1bits.ADON = 1; //Turn on ADC module
     
@@ -216,7 +220,6 @@ int main(void) {
     int outList[8];
     fractcomplex twidFactors[256];
     fractional comSqMag[256];
-    fractional* dstV = &comSqMag[0];
     int QA = 1;
     
     //Initializing pins for shift register
@@ -249,7 +252,7 @@ int main(void) {
         BitReverseComplex(8, &sample[0]);
 
         //7- Determine the magnitude of each bin
-        SquareMagnitudeCplx(256, &sample[0], dstV);
+        SquareMagnitudeCplx(256, &sample[0], &comSqMag[256]);
 
         //8- Determine the dominant frequency
         }
@@ -271,7 +274,7 @@ void __attribute__((interrupt, no_auto_psv)) _ADC1Interrupt(void)
     }
     else{
         //Capturing result
-        *psamp = ADC1BUF0;
+        *psamp = ADC1BUF0 >> 4;
         //Moving pointer to next element of array
         psamp++;
         //incrementing sample counter
