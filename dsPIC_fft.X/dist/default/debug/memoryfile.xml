@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+  <executable name="dist/default/debug/dsPIC_fft.X.debug.elf">
+    <memory name="data">
+      <units>bytes</units>
+      <length>4096</length>
+      <used>6</used>
+      <free>4090</free>
+    </memory>
+    <memory name="program">
+      <units>bytes</units>
+      <length>32994</length>
+      <used>8022</used>
+      <free>24972</free>
+    </memory>
+  </executable>
+</project>
