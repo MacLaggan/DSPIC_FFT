@@ -44,30 +44,27 @@
 #include <xc.h>
 #include <dsp.h>
 
-
-
-
 //Definitions
 #define _XTAL_FREQ 4000000
-#define Fsamp 8000
-#define FFT_SIZE 256
+#define Fsamp 8000 //Sample frequency
+#define FFT_SIZE 256 //Sample size
 
 //Global Variables
-fractcomplex sample[256] __attribute__((space(ymemory), aligned(FFT_SIZE*2*2))); //Global variable for sample 
-fractional *psamp = &sample[0].real; //Pointer to array containing sample
+fractcomplex sample[256] __attribute__((space(ymemory), aligned(FFT_SIZE*2*2))); //Global variable for the sample, stored in ymemory 
+fractional *psamp = &sample[0].real; //Pointer to array containing the sample
 int counter = 0;
+
 //========================================
 //Function declarations
 //-delay
-//-analog to digital read
 //-setup ADC
 //-setup timer 1
 //-setup clock frequency
 //-setup pins (I/O)
 //-write to LED register
+//-setup interrupts
 
-
-//delay = desired time / 1.44E-4 = Delay integer
+//delay = desired time / Tclk = Delay integer
 void _delay(int time, int mult){
     for(int i = 0; i<mult; i++){
         TMR1 = 0;
@@ -77,24 +74,6 @@ void _delay(int time, int mult){
         }
         T1CONbits.TON = 0;
     }
-}
-
-//Read from ADC on pin RA0.
-//This function is currently unused
-unsigned ADCread(){
-    //Begin sampling
-    AD1CON1bits.SAMP = 1;
-    _delay(10,1);
-    
-    //End sampling and begin conversion
-    AD1CON1bits.SAMP = 0;
-    
-    //Waiting till sampling/conversion is done
-    while (!AD1CON1bits.DONE);
-    unsigned result = ADC1BUF0;
-    
-    //Returning sample
-    return result;
 }
 
 //Setup Analog to Digital Converter
@@ -200,6 +179,7 @@ void regWrite(int input){
     LATBbits.LATB0 = 0;   
 }
 
+//Setting up interrupts for 
 void setupINT(){
     IEC0bits.AD1IE = 1;     // Enable ADC interrupt
     INTCON1bits.NSTDIS = 0; // Enable interrupt nesting
@@ -218,10 +198,10 @@ int main(void) {
     setupINT();
     
     //Variable declaration
-    int outList[8];
-    fractcomplex twidFactors[FFT_SIZE/2] __attribute__((space(xmemory)));
-    fractional comSqMag[256];
-    int QA = 1;
+    fractcomplex twidFactors[FFT_SIZE/2] __attribute__((space(xmemory))); //Twiddle factor array stored in x memory
+    fractional comSqMag[FFT_SIZE]; //Array for the magnitude of the FFT output
+    int maxFreq = 0;
+    
     
     //Initializing pins for shift register
     LATBbits.LATB2 = 0;
@@ -235,12 +215,13 @@ int main(void) {
         //1- If pin B15 = 1, begin FFT and sampling process
         if(LATBbits.LATB15 == 1){ 
         //2- Begin sampling
-            counter = 0;
-            psamp = &sample[0].real;
+            counter = 0; //initializing counter before fft
+            psamp = &sample[0].real; //initializing pointer before fft
             AD1CON1bits.ADON = 1; //Turn on ADC module
-            while(counter != 255){
+            while(counter != (FFT_SIZE - 1)){
                 //wait here while sampling
             }
+            
             //3- Verify sample does not hit 0b000000000000 or 0b111111111111 (Clipping)
             //4-b If sample has passed QA, flash LED and begin FFT sequence
 
@@ -252,6 +233,15 @@ int main(void) {
             //7- Determine the magnitude of each bin
             SquareMagnitudeCplx(256, &sample[0].real, &comSqMag[256]);
             //8- Determine the dominant frequency
+            maxFreq = 0;
+            for(int i=0; i<=255; i++){
+                if(comSqMag[i] > maxFreq){
+                    maxFreq = comSqMag[i];
+                }
+            }
+            while(maxFreq > 0b11111111){
+                maxFreq /= 2;
+            }
         }
     }
  
