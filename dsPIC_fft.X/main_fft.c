@@ -51,7 +51,7 @@
 
 //Global Variables
 fractcomplex sample[256] __attribute__((space(ymemory), aligned(FFT_SIZE*2*2))); //Global variable for the sample, stored in ymemory 
-fractional *psamp = &sample[0].real; //Pointer to array containing the sample
+fractcomplex *psamp = &sample[0]; //Pointer to array containing the sample
 int counter = 0;
 
 //========================================
@@ -90,7 +90,7 @@ void setupADC(){
     //Setting ADC to Automatic Sampling
     AD1CON1bits.ASAM = 1; //Automatically sample
     AD1CON1bits.SSRCG = 0; //Allowing hardware to clear SAMP bit
-    AD1CON1bits.SSRC = 111; //Auto-convert sample. 
+    AD1CON1bits.SSRC = 0b111; //Auto-convert sample. 
     
     //Channel Select
     AD1CHS123bits.CH123NB = 00;
@@ -210,13 +210,13 @@ int main(void) {
     LATBbits.LATB1 = 0;
     
     //Initialize twiddle factors 
-    TwidFactorInit(8, &twidFactors[0].real, 0);
+    TwidFactorInit(8, &twidFactors[0], 0);
     while(1){
         //1- If pin B15 = 1, begin FFT and sampling process
         if(LATBbits.LATB15 == 1){ 
         //2- Begin sampling
             counter = 0; //initializing counter before fft
-            psamp = &sample[0].real; //initializing pointer before fft
+            psamp = &sample[0]; //initializing pointer before fft
             AD1CON1bits.ADON = 1; //Turn on ADC module
             while(counter != (FFT_SIZE - 1)){
                 //wait here while sampling
@@ -257,15 +257,15 @@ void __attribute__((interrupt, no_auto_psv)) _ADC1Interrupt(void)
         //Turning off ADC
         AD1CON1bits.ADON = 0; 
         //Capturing last result
-        *psamp = ADC1BUF0;
+        psamp->real = ADC1BUF0;
         //Disabling ADC temporarily
         AD1CON1bits.ADON = 0; //Turn off ADC module
     }
     else{
         //Capturing result
-        *psamp = ADC1BUF0;
+        psamp->real = ADC1BUF0;
         //Moving pointer to next element of array (must increase by two to avoid fractcomplex structure)
-        psamp+=2;
+        psamp++;
         //incrementing sample counter
         counter++;
     }

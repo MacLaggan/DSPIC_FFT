@@ -7,7 +7,7 @@ Command:
   -p33EP32MC202 \
   --mdfp=C:/Program Files/Microchip/MPLABX/v6.20/packs/Microchip/dsPIC33E-GM-GP-MC-GU-MU_DFP/1.5.258/xc16 \
   -o \
-  dist/default/debug/dsPIC_fft.X.debug.elf \
+  dist/default/production/dsPIC_fft.X.production.elf \
   -Lc:/program files/microchip/xc16/v2.10/bin/bin/.. \
   -LC:/Program Files/Microchip/MPLABX/v6.20/packs/Microchip/dsPIC33E-GM-GP-MC-GU-MU_DFP/1.5.258/xc16/bin/../support/PIC24E/gld \
   -LC:/Program Files/Microchip/MPLABX/v6.20/packs/Microchip/dsPIC33E-GM-GP-MC-GU-MU_DFP/1.5.258/xc16/bin/../support/dsPIC33E/gld \
@@ -19,13 +19,10 @@ Command:
   -Lc:/program files/microchip/xc16/v2.10/bin/bin/../../support/dsPIC33C/gld \
   -Lc:/program files/microchip/xc16/v2.10/bin/bin/../../support/dsPIC33E/gld \
   -Lc:/program files/microchip/xc16/v2.10/bin/bin/../../support/dsPIC33F/gld \
-  build/default/debug/main_fft.o \
+  build/default/production/main_fft.o \
   ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a \
   --local-stack \
   --defsym=__MPLAB_BUILD=1 \
-  --defsym=__MPLAB_DEBUG=1 \
-  --defsym=__DEBUG=1 \
-  --defsym=__MPLAB_DEBUGGER_SIMULATOR=1 \
   -Tp33EP32MC202.gld.00 \
   --stack=16 \
   --check-sections \
@@ -38,10 +35,10 @@ Command:
   --stackguard=16 \
   --no-force-link \
   --smart-io \
-  -Map=dist/default/debug/dsPIC_fft.X.debug.map \
+  -Map=dist/default/production/dsPIC_fft.X.production.map \
   --report-mem \
   --memorysummary \
-  dist/default/debug/memoryfile.xml \
+  dist/default/production/memoryfile.xml \
   -start-group \
   --library=c99-pic30-elf \
   --library=m-elf \
@@ -51,17 +48,17 @@ Command:
 Archive member included because of file (symbol)
 
 ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(inittwid.depeo)
-                              build/default/debug/main_fft.o (_TwidFactorInit)
+                              build/default/production/main_fft.o (_TwidFactorInit)
 ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(flt2frct.depeo)
                               ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(inittwid.depeo) (_Float2Fract)
 ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(fft.depeo)
-                              build/default/debug/main_fft.o (_FFTComplexIP)
+                              build/default/production/main_fft.o (_FFTComplexIP)
 ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(stackguard.depeo)
                               ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(fft.depeo) (_STACK_GUARD)
 ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(bitrev.depeo)
-                              build/default/debug/main_fft.o (_BitReverseComplex)
+                              build/default/production/main_fft.o (_BitReverseComplex)
 ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(cplxsqrmag.depeo)
-                              build/default/debug/main_fft.o (_SquareMagnitudeCplx)
+                              build/default/production/main_fft.o (_SquareMagnitudeCplx)
 
 Optional library libp33EP32MC202.a not found
 c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(crt0_extendedep.o)
@@ -169,7 +166,7 @@ section                    address   length (PC units)   length (bytes) (dec)
 
 section                    address      alignment gaps    total length  (dec)
 -------                    -------      --------------    -------------------
-_0000000005A09D2067a52c7b    0x1800                   0           0x400  (1024)
+_0000000005A41D2067a52ac4    0x1800                   0           0x400  (1024)
 .ndata                      0x1c00                   0             0x2  (2)
 .nbss                       0x1c02                   0             0x4  (4)
 .data                       0x1c06                   0             0x2  (2)
@@ -348,12 +345,9 @@ FUID3            0x800ffe           0x000002
 
 Linker script and memory map
 
-LOAD build/default/debug/main_fft.o
+LOAD build/default/production/main_fft.o
 LOAD ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a
                     0x0001                  __MPLAB_BUILD = 0x1
-                    0x0001                  __MPLAB_DEBUG = 0x1
-                    0x0001                  __DEBUG = 0x1
-                    0x0001                  __MPLAB_DEBUGGER_SIMULATOR = 0x1
 LOAD p33EP32MC202
 LOAD c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libfx-elf.a
                     0x57f0                  __FICD = 0x57f0
@@ -393,7 +387,7 @@ LOAD c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libfx-elf.a
  *(.user_init)
  *(.handle)
  *(.isr*)
- .isr.text        0x0002fa         0x32 build/default/debug/main_fft.o
+ .isr.text        0x0002fa         0x32 build/default/production/main_fft.o
                   0x0002fa                  __ADC1Interrupt
  .isr             0x00032c          0x4 default_isr
                   0x00032c                  __DefaultInterrupt
@@ -509,7 +503,8 @@ __FOSCSEL
 
 __FGS             0x0057fa          0x2
  *(__FGS.sec*)
- __FGS.sec        0x0057fa          0x2 /CW/_FGS†‚Ù
+ __FGS.sec        0x0057fa          0x2 /CW/_FGS‡
+·
                   0x0057fa                  __FGS.sec
 
 __FUID0
@@ -529,7 +524,7 @@ __FUID3
 
 .debug_info       0x000000       0x2c0d
  *(.debug_info)
- .debug_info      0x000000       0x1b6e build/default/debug/main_fft.o
+ .debug_info      0x000000       0x1b6e build/default/production/main_fft.o
  .debug_info      0x001b6e        0x29c ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(inittwid.depeo)
  .debug_info      0x001e0a        0x1d6 ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(flt2frct.depeo)
  .debug_info      0x001fe0         0x8d c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(feqltle.EP_o)
@@ -557,7 +552,7 @@ __FUID3
 
 .debug_abbrev     0x000000        0x42b
  *(.debug_abbrev)
- .debug_abbrev    0x000000        0x193 build/default/debug/main_fft.o
+ .debug_abbrev    0x000000        0x193 build/default/production/main_fft.o
  .debug_abbrev    0x000193         0x95 ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(inittwid.depeo)
  .debug_abbrev    0x000228         0x5f ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(flt2frct.depeo)
  .debug_abbrev    0x000287         0x14 c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(feqltle.EP_o)
@@ -584,7 +579,7 @@ __FUID3
 
 .debug_line       0x000000        0xc44
  *(.debug_line)
- .debug_line      0x000000        0x1ec build/default/debug/main_fft.o
+ .debug_line      0x000000        0x1ec build/default/production/main_fft.o
  .debug_line      0x0001ec         0x79 ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(inittwid.depeo)
  .debug_line      0x000265         0x7e ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(flt2frct.depeo)
  .debug_line      0x0002e3         0x37 c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(feqltle.EP_o)
@@ -612,13 +607,13 @@ __FUID3
 
 .debug_frame      0x000000        0x1a8
  *(.debug_frame)
- .debug_frame     0x000000        0x108 build/default/debug/main_fft.o
+ .debug_frame     0x000000        0x108 build/default/production/main_fft.o
  .debug_frame     0x000108         0x50 ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(inittwid.depeo)
  .debug_frame     0x000158         0x50 ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(flt2frct.depeo)
 
 .debug_str        0x000000         0xcd
  *(.debug_str)
- .debug_str       0x000000         0xcd build/default/debug/main_fft.o
+ .debug_str       0x000000         0xcd build/default/production/main_fft.o
 
 .debug_loc
  *(.debug_loc)
@@ -630,7 +625,7 @@ __FUID3
                   0x000000         0xf1
  *(.debug_pubnames)
  .debug_pubnames
-                  0x000000         0xaa build/default/debug/main_fft.o
+                  0x000000         0xaa build/default/production/main_fft.o
  .debug_pubnames
                   0x0000aa         0x25 ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(inittwid.depeo)
  .debug_pubnames
@@ -642,7 +637,7 @@ __FUID3
 .debug_aranges    0x000000        0x2e8
  *(.debug_aranges)
  .debug_aranges
-                  0x000000         0x18 build/default/debug/main_fft.o
+                  0x000000         0x18 build/default/production/main_fft.o
  .debug_aranges
                   0x000018         0x18 ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(inittwid.depeo)
  .debug_aranges
@@ -1782,15 +1777,16 @@ LOAD c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a
 LOAD c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libm-elf.a
 LOAD c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-elf.a
 END GROUP
-OUTPUT(dist/default/debug/dsPIC_fft.X.debug.elf elf32-pic30)
-LOAD /CW/_FGS†‚Ù
+OUTPUT(dist/default/production/dsPIC_fft.X.production.elf elf32-pic30)
+LOAD /CW/_FGS‡
+·
 LOAD default_isr
 LOAD data_init
 
 .debug_pubtypes
                   0x0002e8        0x2e0
  .debug_pubtypes
-                  0x0002e8        0x28d build/default/debug/main_fft.o
+                  0x0002e8        0x28d build/default/production/main_fft.o
  .debug_pubtypes
                   0x000575         0x32 ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(inittwid.depeo)
  .debug_pubtypes
@@ -1799,7 +1795,7 @@ LOAD data_init
 __c30_signature
                   0x0005c8         0xae
  __c30_signature
-                  0x0005c8          0x6 build/default/debug/main_fft.o
+                  0x0005c8          0x6 build/default/production/main_fft.o
  __c30_signature
                   0x0005ce          0x6 ..\..\..\..\..\..\..\..\Program Files\Microchip\xc16\v2.10\lib\libdsp-elf.a(inittwid.depeo)
  __c30_signature
@@ -1857,18 +1853,18 @@ __c30_signature
  __c30_signature
                   0x000670          0x6 c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(fixsfdi.EP_o)
 
-_0000000005A09D2067a52c7b
+_0000000005A41D2067a52ac4
                     0x1800        0x400
- _0000000005A09D2067a52c7b
-                    0x1800        0x400 build/default/debug/main_fft.o
+ _0000000005A41D2067a52ac4
+                    0x1800        0x400 build/default/production/main_fft.o
                     0x1800                  _sample
 
 .ndata              0x1c00          0x2
- .ndata             0x1c00          0x2 build/default/debug/main_fft.o
+ .ndata             0x1c00          0x2 build/default/production/main_fft.o
                     0x1c00                  _psamp
 
 .nbss               0x1c02          0x4
- .nbss              0x1c02          0x2 build/default/debug/main_fft.o
+ .nbss              0x1c02          0x2 build/default/production/main_fft.o
                     0x1c02                  _counter
  .nbss              0x1c04          0x2 c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(errno.EP_o)
                     0x1c04                  _errno
@@ -1878,25 +1874,25 @@ _0000000005A09D2067a52c7b
                     0x1c06                  _STACK_GUARD
 
 .config_IESO      0x0057f8          0x2
- .config_IESO     0x0057f8          0x2 build/default/debug/main_fft.o
+ .config_IESO     0x0057f8          0x2 build/default/production/main_fft.o
 
 .config_FCKSM     0x0057f6          0x2
- .config_FCKSM    0x0057f6          0x2 build/default/debug/main_fft.o
+ .config_FCKSM    0x0057f6          0x2 build/default/production/main_fft.o
 
 .config_FWDTEN    0x0057f4          0x2
  .config_FWDTEN
-                  0x0057f4          0x2 build/default/debug/main_fft.o
+                  0x0057f4          0x2 build/default/production/main_fft.o
 
 .config_WDTWIN    0x0057f2          0x2
  .config_WDTWIN
-                  0x0057f2          0x2 build/default/debug/main_fft.o
+                  0x0057f2          0x2 build/default/production/main_fft.o
 
 .config_JTAGEN    0x0057f0          0x2
  .config_JTAGEN
-                  0x0057f0          0x2 build/default/debug/main_fft.o
+                  0x0057f0          0x2 build/default/production/main_fft.o
 
 .text             0x0014d6        0x1e4
- .text            0x0014d6        0x1e4 build/default/debug/main_fft.o
+ .text            0x0014d6        0x1e4 build/default/production/main_fft.o
                   0x0014d6                  __delay
                   0x001502                  _setupADC
                   0x00154c                  _setupTimer1
