@@ -53,8 +53,8 @@
 #define FFT_SIZE 256
 
 //Global Variables
-int sample[256]; //Global variable for sample 
-int *psamp = &sample[0]; //Pointer to array containing sample
+fractcomplex sample[256] __attribute__((space(ymemory), aligned(FFT_SIZE*2*2))); //Global variable for sample 
+fractional *psamp = &sample[0].real; //Pointer to array containing sample
 int counter = 0;
 //========================================
 //Function declarations
@@ -80,6 +80,7 @@ void _delay(int time, int mult){
 }
 
 //Read from ADC on pin RA0.
+//This function is currently unused
 unsigned ADCread(){
     //Begin sampling
     AD1CON1bits.SAMP = 1;
@@ -102,8 +103,8 @@ void setupADC(){
     ANSELAbits.ANSA0 = 1; //Input
     TRISAbits.TRISA0 = 1; //Analog Pin
     
-    //Select ADC conversion clock
-    AD1CON3bits.ADCS = 0b11; //(x+1)*TCLK = TAD
+    //Select ADC conversion clock to be 1MHz
+    AD1CON3bits.ADCS = 0b110001; //(50)*TCLK = TAD (50 * 1/50MHz = 1/1.0MHz))
     
     AD1CON2bits.VCFG = 0b000; //Set to VDD and VSS
     
@@ -120,13 +121,13 @@ void setupADC(){
 
     AD1CON1bits.AD12B = 1; //Using 12-bit ADC
     
-    AD1CON3bits.SAMC = 0x3; //time before auto sample x*TAD
+    AD1CON3bits.SAMC = 31; //auto sample time
     
     AD1CON4bits.ADDMAEN = 0; //No direct memory access (not required)
     
     AD1CON2bits.SMPI = 0b0000; //Interrupt after every sample and conversion
     
-    AD1CON1bits.ADON = 1; //Turn on ADC module
+    
     
     //Clear ADC interrupt flag
     //Enable ADC interrupt
@@ -218,7 +219,7 @@ int main(void) {
     
     //Variable declaration
     int outList[8];
-    fractcomplex twidFactors[256];
+    fractcomplex twidFactors[FFT_SIZE/2] __attribute__((space(xmemory)));
     fractional comSqMag[256];
     int QA = 1;
     
@@ -229,32 +230,28 @@ int main(void) {
     LATBbits.LATB1 = 0;
     
     //Initialize twiddle factors 
-    TwidFactorInit(8, &twidFactors[0], 0);
+    TwidFactorInit(8, &twidFactors[0].real, 0);
     while(1){
-        //1- If pin B15 = 1, begin FFT
-        if(LATBbits.LATB15 == 1){
-            
+        //1- If pin B15 = 1, begin FFT and sampling process
+        if(LATBbits.LATB15 == 1){ 
         //2- Begin sampling
-            
+            counter = 0;
+            psamp = &sample[0].real;
+            AD1CON1bits.ADON = 1; //Turn on ADC module
             while(counter != 255){
                 //wait here while sampling
             }
-        //3- Verify sample does not hit 0b000000000000 or 0b111111111111 (Clipping)
+            //3- Verify sample does not hit 0b000000000000 or 0b111111111111 (Clipping)
+            //4-b If sample has passed QA, flash LED and begin FFT sequence
 
-        //4-b If sample has passed QA, flash LED and begin FFT sequence
-
-        //FFT Begins
-
-        //5- Run FFT 
-        FFTComplexIP(8, &sample[0], &twidFactors[0], 0xFF00); //Note that this function performs the FFT and stores the result on top oof sample[]
-
-        //6- Perform bit reversal on the data
-        BitReverseComplex(8, &sample[0]);
-
-        //7- Determine the magnitude of each bin
-        SquareMagnitudeCplx(256, &sample[0], &comSqMag[256]);
-
-        //8- Determine the dominant frequency
+            //*****FFT Begins*****
+            //5- Run FFT 
+            FFTComplexIP(8, &sample[0].real, &twidFactors[0].real, 0xFF00); //Note that this function performs the FFT and stores the result on top oof sample[]
+            //6- Perform bit reversal on the data
+            BitReverseComplex(8, &sample[0].real);
+            //7- Determine the magnitude of each bin
+            SquareMagnitudeCplx(256, &sample[0].real, &comSqMag[256]);
+            //8- Determine the dominant frequency
         }
     }
  
@@ -271,12 +268,14 @@ void __attribute__((interrupt, no_auto_psv)) _ADC1Interrupt(void)
         AD1CON1bits.ADON = 0; 
         //Capturing last result
         *psamp = ADC1BUF0;
+        //Disabling ADC temporarily
+        AD1CON1bits.ADON = 0; //Turn off ADC module
     }
     else{
         //Capturing result
-        *psamp = ADC1BUF0 >> 4;
-        //Moving pointer to next element of array
-        psamp++;
+        *psamp = ADC1BUF0;
+        //Moving pointer to next element of array (must increase by two to avoid fractcomplex structure)
+        psamp+=2;
         //incrementing sample counter
         counter++;
     }
