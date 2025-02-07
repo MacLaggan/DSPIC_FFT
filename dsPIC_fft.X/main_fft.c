@@ -43,7 +43,7 @@
 //Included Libraries
 #include <xc.h>
 #include <dsp.h>
-
+#include <math.h>
 //Definitions
 #define _XTAL_FREQ 4000000
 #define Fsamp 8000 //Sample frequency
@@ -83,7 +83,7 @@ void setupADC(){
     TRISAbits.TRISA0 = 1; //Analog Pin
     
     //Select ADC conversion clock to be 1MHz
-    AD1CON3bits.ADCS = 0b1111101; //(50)*TCLK = TAD (50 * 1/50MHz = 1/1.0MHz))
+    AD1CON3bits.ADCS = 102; //(37)*TCLK = TAD (50 * 1/50MHz = 1/1.0MHz))
     
     AD1CON2bits.VCFG = 0b000; //Set to VDD and VSS
     
@@ -128,9 +128,9 @@ void setupTimer1(){
 //Setup DSPIC internal clock frequency
 void setupCLK(){
     //Configure Clock
-    PLLFBDbits.PLLDIV = 50;
-    CLKDIVbits.PLLPRE = 0;
-    CLKDIVbits.PLLPOST = 4;
+    PLLFBDbits.PLLDIV = 405;
+    CLKDIVbits.PLLPRE = 8;
+    CLKDIVbits.PLLPOST = 2;
 }
 
 //Setting up IO pins
@@ -149,7 +149,11 @@ void setupIO(){
     ANSELBbits.ANSB2 = 0; //Pin B2 is assigned to the SRCLK pin on the register
     
     TRISBbits.TRISB15 = 1; //Pin B15 is configured as digital input for button
-    TRISAbits.TRISA4 = 0;
+    TRISBbits.TRISB4 = 0;
+    
+    TRISBbits.TRISB14 = 0;
+    TRISBbits.TRISB13 = 0;
+    TRISBbits.TRISB12 = 0;
     
 }
 
@@ -184,31 +188,32 @@ void regWrite(int input){
 //Setting up interrupts for 
 void setupINT(){
     IEC0bits.AD1IE = 1;     // Enable ADC interrupt
+    IPC3bits.AD1IP = 0b111; //Highest priority
     INTCON1bits.NSTDIS = 1; // Enable interrupt nesting
     INTCON2bits.GIE = 1;    // Global Interrupt Enable
 }
 
 void setupUART(){
     // Set the baud rate (9600 baud for 40 MHz system clock)
-    U1BRG = 324;   // Baud rate generator for 9600 baud (Fosc = 40MHz)
+       // Baud rate generator for 9600 baud (Fosc = 40MHz)
 
     // Set UART1 configuration
-    U1MODEbits.UARTEN = 0; // Disable UART
-    U1MODEbits.PDSEL = 0;  // 8-bit data, no parity
-    U1MODEbits.STSEL = 0;  // 1 stop bit
-    U1MODEbits.BRGH = 0;   // High baud rate (BRGH = 1)
-
-    
-    U1MODEbits.UARTEN = 1;  // Enable UART1 module
-    U1STAbits.UTXEN = 1;   // Enable UART transmitter
+    U2MODEbits.UARTEN = 0; // Disable UART
+    U2MODEbits.PDSEL = 0;  // 8-bit data, no parity
+    U2MODEbits.STSEL = 0;  // 1 stop bit
+    U2MODEbits.BRGH = 1;   // High baud rate (BRGH = 1)
+    U2STAbits.UTXINV = 0;
+    U2BRG = 968;
+    U2MODEbits.UARTEN = 1;  // Enable UART1 module
+    U2STAbits.UTXEN = 1;   // Enable UART transmitter
     //__builtin_write_OSCCONL(OSCCON & ~(1<<6));
-    RPOR0bits.RP20R = 0x1; //Assigned to RP35
+    RPOR1bits.RP36R = 0b11; //Assigned to RP35
     //__builtin_write_OSCCONL(OSCCON | (1<<6));
 }
 
 void sendData(uint8_t data){
-    while (U1STAbits.UTXBF);  // Wait until UART transmit buffer is not full
-    U1TXREG = data;           // Write data to transmit register
+    while (U2STAbits.UTXBF);  // Wait until UART transmit buffer is not full
+    U2TXREG = data;           // Write data to transmit register
 }
 
 //========================================
@@ -239,7 +244,7 @@ int main(void) {
     TwidFactorInit(8, &twidFactors[0], 0);
     while(1){
         //1- If pin B15 = 1, begin FFT and sampling process
-        if(1){ 
+        if(PORTBbits.RB15 == 1){ 
         //2- Begin sampling
             
 
@@ -253,30 +258,92 @@ int main(void) {
                 //wait here while sampling
                 
             }
-            
-            
+            _delay(10000,1000);
+            counter = 0;
+            LATBbits.LATB14 = 1;
+            while(counter < 256){
+                if(1){
+                    sendData(sample[counter].real & 0xFF);
+                    _delay(100,100);
+                    counter++;
+                }
+            }
+            LATBbits.LATB14 = 0;
+            _delay(1000,100);
+            counter = 0;
+            LATBbits.LATB14 = 1;
+            while(counter < 256){
+                if(1){
+                    sendData((sample[counter].real & 0xFF00) >> 8);
+                    _delay(100,100);
+                    counter++;
+                }
+            }
+            LATBbits.LATB14 = 0;
             //3- Verify sample does not hit 0b000000000000 or 0b111111111111 (Clipping)
             //4-b If sample has passed QA, flash LED and begin FFT sequence
 
             //*****FFT Begins*****
             //5- Run FFT 
             FFTComplexIP(8, &sample[0], &twidFactors[0], 0xFF00); //Note that this function performs the FFT and stores the result on top oof sample[]
-            
-            
-            
             //6- Perform bit reversal on the data
             BitReverseComplex(8, &sample[0]);
             
+            
+            
+            LATBbits.LATB13 = 1;
+            counter = 0;
+            while(counter < 256){
+                if(1){
+                    sendData(sample[counter].real / 16);
+                    _delay(100,100);
+                    counter++;
+                }
+            }
+            LATBbits.LATB13 = 0;
+            LATBbits.LATB12 = 1;
+            counter = 0;
+            while(counter < 256){
+                if(1){
+                    sendData(sample[counter].imag / 16);
+                    _delay(100,100);
+                    counter++;
+                }
+            }
+            LATBbits.LATB12 = 0;
             //7- Determine the magnitude of each bin
-            SquareMagnitudeCplx(256, &sample[0], &comSqMag[256]);
+            SquareMagnitudeCplx(256, &sample[0], &comSqMag[0]);
+            counter = 0;
+            while(counter < 256){
+                if(1){
+                    sendData(comSqMag[counter] & 0xFF);
+                    _delay(100,100);
+                    counter++;
+                }
+            }
+            counter = 0;
+            while(counter < 256){
+                if(1){
+                    sendData((comSqMag[counter] & 0xFF00)>>8);
+                    _delay(100,100);
+                    counter++;
+                }
+            }
+            
+            
             
             //8- Determine the dominant frequency
             maxFreq = 0;
+            uint8_t loc;
             for(int i=0; i<=255; i++){
                 if(comSqMag[i] > maxFreq){
                     maxFreq = comSqMag[i];
+                    loc = i;
                 }
             }
+            sendData(loc);
+            _delay(100,100);
+            sendData(0b101);
             
             
         }
@@ -290,6 +357,8 @@ void __attribute__((interrupt, auto_psv)) _AD1Interrupt(void)
 {
     // Clear the interrupt flag
     LATAbits.LATA1 = 0;
+    Nop();
+    LATAbits.LATA1 = 1;
     if(counter == 255){
         //Turning off ADC
         AD1CON1bits.ADON = 0; 
@@ -310,5 +379,6 @@ void __attribute__((interrupt, auto_psv)) _AD1Interrupt(void)
         
     }
     IFS0bits.AD1IF = 0;
-    LATAbits.LATA1 = 1;
+    
+    
 }
