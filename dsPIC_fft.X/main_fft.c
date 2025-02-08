@@ -158,6 +158,10 @@ void setupIO(){
     TRISBbits.TRISB13 = 0;
     TRISBbits.TRISB12 = 0;
     
+    TRISAbits.TRISA4 = 0; //Digital output
+    ANSELAbits.ANSA4 = 0; //Pin A4 is piezo speaker
+    LATAbits.LATA4 = 0;
+    
     LATBbits.LATB12 = 1;    
 }
 
@@ -220,6 +224,17 @@ void sendData(uint8_t data){
     U2TXREG = data;           // Write data to transmit register
 }
 
+void sendSound(int loc, int time){
+    int freq = 24000 / (loc/3); 
+    for(int i=0;i<loc*time;i++){
+        LATAbits.LATA4 = 1;
+        _delay((int)freq,1);
+        LATAbits.LATA4 = 0;
+        _delay((int)freq,1);
+    }
+
+}
+
 //========================================
 
 
@@ -239,11 +254,18 @@ int main(void) {
     
     
     //Initializing pins for shift register
-    //LATBbits.LATB2 = 0;
-    //LATBbits.LATB0 = 1;
-    //LATBbits.LATB2 = 0;
-    //LATBbits.LATB1 = 0;
+    LATBbits.LATB2 = 0;
+    LATBbits.LATB0 = 1;
+    LATBbits.LATB2 = 0;
+    LATBbits.LATB1 = 0;
     
+    //Start sound
+    
+    sendSound(28, 5);
+    _delay(1000,100);
+    sendSound(28, 5);
+    _delay(1000,100);
+    sendSound(35, 5);
     //Initialize twiddle factors 
     TwidFactorInit(8, &twidFactors[0], 0);
     while(1){
@@ -262,43 +284,62 @@ int main(void) {
             }
             
             _delay(10000,1000);
-            
-            //3- Verify sample does not hit 0b000000000000 or 0b111111111111 (Clipping)
-            //4- If sample has passed QA, flash LED and begin FFT sequence
+            counter = 0;
+            //3- Verify sample does not hit 0b0000000000000000 or 0b111111111111 (Clipping)
+            for(int i=0;i<256;i++){
+                if(sample[i].real < 0x20){
+                   counter++; 
+                }    
+            }
+            if(counter > 25){
+                LATBbits.LATB13 = 1;
+                _delay(100,10000);
+                sendSound(20, 5);
+                _delay(1000,100);
+                sendSound(20, 5);
+                _delay(1000,100);
+                LATBbits.LATB13 = 0;
+                LATBbits.LATB14 = 0; //Turning off indicator, sampling is finished.
+                LATBbits.LATB12 = 1;
+            }
+            else{
+                //4- If sample has passed QA, flash LED and begin FFT sequence
 
-            //*****FFT Begins*****
-            //5- Run FFT 
-            
-            FFTComplexIP(8, &sample[0], &twidFactors[0], 0xFF00); 
-            
-            //6- Perform bit reversal on the data
-            BitReverseComplex(8, &sample[0]);
-     
-            //7- Determine the magnitude of each bin
-            SquareMagnitudeCplx(256, &sample[0], &comSqMag[0]);
-           
-            //8- Determine the dominant frequency
-            maxFreq = 0;
-            uint8_t loc;
-            for(int i=128; i<=255; i++){
-                if(comSqMag[i] > maxFreq){
-                    maxFreq = comSqMag[i];
-                    loc = i;
+                //*****FFT Begins*****
+                //5- Run FFT 
+
+                FFTComplexIP(8, &sample[0], &twidFactors[0], 0xFF00); 
+
+                //6- Perform bit reversal on the data
+                BitReverseComplex(8, &sample[0]);
+
+                //7- Determine the magnitude of each bin
+                SquareMagnitudeCplx(256, &sample[0], &comSqMag[0]);
+
+                //8- Determine the dominant frequency
+                maxFreq = 0;
+                uint8_t loc;
+                for(int i=128; i<=255; i++){
+                    if(comSqMag[i] > maxFreq){
+                        maxFreq = comSqMag[i];
+                        loc = i;
+                    }
                 }
-            }
-            maxFreq = 0;
-            for(int i=3; i<=127; i++){
-                if(comSqMag[i] > maxFreq){
-                    maxFreq = comSqMag[i];
-                    loc = i;
+                maxFreq = 0;
+                for(int i=3; i<=127; i++){
+                    if(comSqMag[i] > maxFreq){
+                        maxFreq = comSqMag[i];
+                        loc = i;
+                    }
                 }
+                sendData(loc);
+                sendData((loc*31.25)/256);
+                sendData((loc*31.25));
+                LATBbits.LATB14 = 0; //Turning off indicator, sampling is finished.
+                LATBbits.LATB12 = 1;
+                regWrite(loc);
+                sendSound(loc, 20);
             }
-            sendData(loc);
-            sendData((loc*31.25)/256);
-            sendData((loc*31.25));
-            LATBbits.LATB14 = 0; //Turning off indicator, sampling is finished.
-            LATBbits.LATB12 = 1;
-            regWrite(loc);
         }
     }
  
