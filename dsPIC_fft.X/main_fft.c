@@ -139,6 +139,9 @@ void setupIO(){
     TRISAbits.TRISA1 = 0; //Digital output
     ANSELAbits.ANSA1 = 0; //Pin A1 is assigned to the SER pin on the register
     
+    TRISBbits.TRISB3 = 0; //Digital output
+    ANSELBbits.ANSB3 = 0; //Pin B3 is assigned to the SER pin on the register
+    
     TRISBbits.TRISB0 = 0; //Digital output
     ANSELBbits.ANSB0 = 0; //Pin B0 is assigned to the OE' pin on the register
     
@@ -155,6 +158,7 @@ void setupIO(){
     TRISBbits.TRISB13 = 0;
     TRISBbits.TRISB12 = 0;
     
+    LATBbits.LATB12 = 1;    
 }
 
 //Write integer to shift register. Must have delay between function calls.
@@ -167,7 +171,7 @@ void regWrite(int input){
     }
     //print list to register
     for(int j=0; j<8; j++){
-        LATAbits.LATA1 = outList[j];
+        LATBbits.LATB3 = outList[j];
 
         //Pulse SRCLK
         LATBbits.LATB2 = 1; 
@@ -175,7 +179,7 @@ void regWrite(int input){
         LATBbits.LATB2 = 0;
 
         //RESET SER
-        LATAbits.LATA1 = 0;
+        LATBbits.LATB3 = 0;
 
         //Pulse RCLK
         LATBbits.LATB1 = 1;
@@ -246,92 +250,33 @@ int main(void) {
         //1- If pin B15 = 1, begin FFT and sampling process
         if(PORTBbits.RB15 == 1){ 
         //2- Begin sampling
-            
-
+            LATBbits.LATB12 = 0;
+            LATBbits.LATB14 = 1; //turning on indicator LED
             counter = 0; //initializing counter before fft
             psamp = &sample[0]; //initializing pointer before fft
             AD1CON1bits.ADON = 1; //Turn on ADC module
             
-            
-            
+
             while(counter != (FFT_SIZE - 1)){
                 //wait here while sampling
-                
             }
+            
             _delay(10000,1000);
-            counter = 0;
-            LATBbits.LATB14 = 1;
-            while(counter < 256){
-                if(1){
-                    sendData(sample[counter].real & 0xFF);
-                    _delay(100,100);
-                    counter++;
-                }
-            }
-            LATBbits.LATB14 = 0;
-            _delay(1000,100);
-            counter = 0;
-            LATBbits.LATB14 = 1;
-            while(counter < 256){
-                if(1){
-                    sendData((sample[counter].real & 0xFF00) >> 8);
-                    _delay(100,100);
-                    counter++;
-                }
-            }
-            LATBbits.LATB14 = 0;
+            
             //3- Verify sample does not hit 0b000000000000 or 0b111111111111 (Clipping)
-            //4-b If sample has passed QA, flash LED and begin FFT sequence
+            //4- If sample has passed QA, flash LED and begin FFT sequence
 
             //*****FFT Begins*****
             //5- Run FFT 
-            FFTComplexIP(8, &sample[0], &twidFactors[0], 0xFF00); //Note that this function performs the FFT and stores the result on top oof sample[]
+            
+            FFTComplexIP(8, &sample[0], &twidFactors[0], 0xFF00); 
+            
             //6- Perform bit reversal on the data
             BitReverseComplex(8, &sample[0]);
-            
-            
-            
-            LATBbits.LATB13 = 1;
-            counter = 0;
-            while(counter < 256){
-                if(1){
-                    sendData(sample[counter].real / 16);
-                    _delay(100,100);
-                    counter++;
-                }
-            }
-            LATBbits.LATB13 = 0;
-            LATBbits.LATB12 = 1;
-            counter = 0;
-            while(counter < 256){
-                if(1){
-                    sendData(sample[counter].imag / 16);
-                    _delay(100,100);
-                    counter++;
-                }
-            }
-            LATBbits.LATB12 = 0;
+     
             //7- Determine the magnitude of each bin
             SquareMagnitudeCplx(256, &sample[0], &comSqMag[0]);
-            counter = 0;
-            while(counter < 256){
-                if(1){
-                    sendData(comSqMag[counter] & 0xFF);
-                    _delay(100,100);
-                    counter++;
-                }
-            }
-            counter = 0;
-            while(counter < 256){
-                if(1){
-                    sendData((comSqMag[counter] & 0xFF00)>>8);
-                    _delay(100,100);
-                    counter++;
-                }
-            }
-            
-            
-            
+           
             //8- Determine the dominant frequency
             maxFreq = 0;
             uint8_t loc;
@@ -341,19 +286,19 @@ int main(void) {
                     loc = i;
                 }
             }
-            sendData(loc);
-            for(int i=0; i<=127; i++){
+            maxFreq = 0;
+            for(int i=3; i<=127; i++){
                 if(comSqMag[i] > maxFreq){
                     maxFreq = comSqMag[i];
                     loc = i;
                 }
             }
-            _delay(100,100);
             sendData(loc);
-            _delay(100,100);
-            sendData(0b101);
-            
-            
+            sendData((loc*31.25)/256);
+            sendData((loc*31.25));
+            LATBbits.LATB14 = 0; //Turning off indicator, sampling is finished.
+            LATBbits.LATB12 = 1;
+            regWrite(loc);
         }
     }
  
