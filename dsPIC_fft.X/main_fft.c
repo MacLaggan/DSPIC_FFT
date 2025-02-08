@@ -335,12 +335,20 @@ int main(void) {
             //8- Determine the dominant frequency
             maxFreq = 0;
             uint8_t loc;
-            for(int i=0; i<=255; i++){
+            for(int i=128; i<=255; i++){
                 if(comSqMag[i] > maxFreq){
                     maxFreq = comSqMag[i];
                     loc = i;
                 }
             }
+            sendData(loc);
+            for(int i=0; i<=127; i++){
+                if(comSqMag[i] > maxFreq){
+                    maxFreq = comSqMag[i];
+                    loc = i;
+                }
+            }
+            _delay(100,100);
             sendData(loc);
             _delay(100,100);
             sendData(0b101);
