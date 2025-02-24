@@ -1,0 +1,2007 @@
+
+
+Microchip MPLAB XC8 Assembler V3.00 build 20241204225717 
+                                                                                               Tue Feb 11 18:05:42 2025
+
+Microchip MPLAB XC8 C Compiler v3.00 (Free license) build 20241204225717 Og1 
+     1                           	processor	16F18855
+     2                           	pagewidth 120
+     3                           	opt	flic
+     4                           	psect	idataCOMMON,global,class=CODE,space=0,delta=2,noexec
+     5                           	psect	cinit,global,class=CODE,space=0,merge=1,delta=2
+     6                           	psect	bssCOMMON,global,class=COMMON,space=1,delta=1,noexec
+     7                           	psect	dataCOMMON,global,class=COMMON,space=1,delta=1,noexec
+     8                           	psect	cstackCOMMON,global,class=COMMON,space=1,delta=1,noexec
+     9                           	psect	maintext,global,class=CODE,space=0,merge=1,split=1,delta=2
+    10                           	psect	text1,local,class=CODE,space=0,merge=1,delta=2
+    11                           	psect	text2,local,class=CODE,space=0,merge=1,delta=2
+    12                           	psect	text3,local,class=CODE,space=0,merge=1,delta=2
+    13                           	psect	text4,local,class=CODE,space=0,merge=1,delta=2
+    14                           	psect	intentry,global,class=CODE,space=0,delta=2
+    15                           	psect	config,global,abs,ovrld,class=CONFIG,space=4,delta=2,noexec
+    16                           	dabs	1,0x7E,2
+    17     0000                     
+    18                           ; Generated 11/01/2024 GMT
+    19                           ; 
+    20                           ; Copyright © 2024, Microchip Technology Inc. and its subsidiaries ("Microchip")
+    21                           ; All rights reserved.
+    22                           ; 
+    23                           ; This software is developed by Microchip Technology Inc. and its subsidiaries ("Microch
+      +                          ip").
+    24                           ; 
+    25                           ; Redistribution and use in source and binary forms, with or without modification, are
+    26                           ; permitted provided that the following conditions are met:
+    27                           ; 
+    28                           ;     1. Redistributions of source code must retain the above copyright notice, this lis
+      +                          t of
+    29                           ;        conditions and the following disclaimer.
+    30                           ; 
+    31                           ;     2. Redistributions in binary form must reproduce the above copyright notice, this 
+      +                          list
+    32                           ;        of conditions and the following disclaimer in the documentation and/or other
+    33                           ;        materials provided with the distribution. Publication is not required when
+    34                           ;        this file is used in an embedded application.
+    35                           ; 
+    36                           ;     3. Microchip's name may not be used to endorse or promote products derived from th
+      +                          is
+    37                           ;        software without specific prior written permission.
+    38                           ; 
+    39                           ; THIS SOFTWARE IS PROVIDED BY MICROCHIP "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+    40                           ; INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS F
+      +                          OR
+    41                           ; PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL MICROCHIP BE LIABLE FOR ANY DIRECT, INDIREC
+      +                          T,
+    42                           ; INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING BUT NOT LIMITED TO
+    43                           ; PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA OR PROFITS; OR BUSINESS
+    44                           ; INTERRUPTION) HOWSOEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, ST
+      +                          RICT
+    45                           ; LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE U
+      +                          SE OF
+    46                           ; THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    47                           ; 
+    48                           ; 
+    49                           ; Code-generator required, PIC16F18855 Definitions
+    50                           ; 
+    51                           ; SFR Addresses
+    52     0008                     bsr             equ	8
+    53     0005                     fsr0h           equ	5
+    54     0004                     fsr0l           equ	4
+    55     0007                     fsr1h           equ	7
+    56     0006                     fsr1l           equ	6
+    57     0000                     indf            equ	0
+    58     0000                     indf0           equ	0
+    59     0001                     indf1           equ	1
+    60     000B                     intcon          equ	11
+    61     0002                     pc              equ	2
+    62     0002                     pcl             equ	2
+    63     000A                     pclath          equ	10
+    64     0003                     status          equ	3
+    65     0009                     wreg            equ	9
+    66     0000                     INDF0           equ	0	;# 
+    67     0001                     INDF1           equ	1	;# 
+    68     0002                     PCL             equ	2	;# 
+    69     0003                     STATUS          equ	3	;# 
+    70     0004                     FSR0L           equ	4	;# 
+    71     0005                     FSR0H           equ	5	;# 
+    72     0006                     FSR1L           equ	6	;# 
+    73     0007                     FSR1H           equ	7	;# 
+    74     0008                     BSR             equ	8	;# 
+    75     0009                     WREG            equ	9	;# 
+    76     000A                     PCLATH          equ	10	;# 
+    77     000B                     INTCON          equ	11	;# 
+    78     000C                     PORTA           equ	12	;# 
+    79     000D                     PORTB           equ	13	;# 
+    80     000E                     PORTC           equ	14	;# 
+    81     0010                     PORTE           equ	16	;# 
+    82     0011                     TRISA           equ	17	;# 
+    83     0012                     TRISB           equ	18	;# 
+    84     0013                     TRISC           equ	19	;# 
+    85     0016                     LATA            equ	22	;# 
+    86     0017                     LATB            equ	23	;# 
+    87     0018                     LATC            equ	24	;# 
+    88     001C                     TMR0L           equ	28	;# 
+    89     001C                     TMR0            equ	28	;# 
+    90     001D                     TMR0H           equ	29	;# 
+    91     001D                     PR0             equ	29	;# 
+    92     001E                     T0CON0          equ	30	;# 
+    93     001F                     T0CON1          equ	31	;# 
+    94     008C                     ADRES           equ	140	;# 
+    95     008C                     ADRESL          equ	140	;# 
+    96     008D                     ADRESH          equ	141	;# 
+    97     008E                     ADPREV          equ	142	;# 
+    98     008E                     ADPREVL         equ	142	;# 
+    99     008F                     ADPREVH         equ	143	;# 
+   100     0090                     ADACC           equ	144	;# 
+   101     0090                     ADACCL          equ	144	;# 
+   102     0091                     ADACCH          equ	145	;# 
+   103     0093                     ADCON0          equ	147	;# 
+   104     0094                     ADCON1          equ	148	;# 
+   105     0095                     ADCON2          equ	149	;# 
+   106     0096                     ADCON3          equ	150	;# 
+   107     0097                     ADSTAT          equ	151	;# 
+   108     0098                     ADCLK           equ	152	;# 
+   109     0099                     ADACT           equ	153	;# 
+   110     009A                     ADREF           equ	154	;# 
+   111     009B                     ADCAP           equ	155	;# 
+   112     009C                     ADPRE           equ	156	;# 
+   113     009D                     ADACQ           equ	157	;# 
+   114     009E                     ADPCH           equ	158	;# 
+   115     010C                     ADCNT           equ	268	;# 
+   116     010D                     ADRPT           equ	269	;# 
+   117     010E                     ADLTH           equ	270	;# 
+   118     010E                     ADLTHL          equ	270	;# 
+   119     010F                     ADLTHH          equ	271	;# 
+   120     0110                     ADUTH           equ	272	;# 
+   121     0110                     ADUTHL          equ	272	;# 
+   122     0111                     ADUTHH          equ	273	;# 
+   123     0112                     ADSTPT          equ	274	;# 
+   124     0112                     ADSTPTL         equ	274	;# 
+   125     0113                     ADSTPTH         equ	275	;# 
+   126     0114                     ADFLTR          equ	276	;# 
+   127     0114                     ADFLTRL         equ	276	;# 
+   128     0115                     ADFLTRH         equ	277	;# 
+   129     0116                     ADERR           equ	278	;# 
+   130     0116                     ADERRL          equ	278	;# 
+   131     0117                     ADERRH          equ	279	;# 
+   132     0119                     RC1REG          equ	281	;# 
+   133     0119                     RCREG           equ	281	;# 
+   134     0119                     RCREG1          equ	281	;# 
+   135     011A                     TX1REG          equ	282	;# 
+   136     011A                     TXREG1          equ	282	;# 
+   137     011A                     TXREG           equ	282	;# 
+   138     011B                     SP1BRG          equ	283	;# 
+   139     011B                     SPBRG           equ	283	;# 
+   140     011B                     SP1BRGL         equ	283	;# 
+   141     011B                     SPBRG1          equ	283	;# 
+   142     011B                     SPBRGL          equ	283	;# 
+   143     011C                     SP1BRGH         equ	284	;# 
+   144     011C                     SPBRGH          equ	284	;# 
+   145     011C                     SPBRGH1         equ	284	;# 
+   146     011D                     RC1STA          equ	285	;# 
+   147     011D                     RCSTA1          equ	285	;# 
+   148     011D                     RCSTA           equ	285	;# 
+   149     011E                     TX1STA          equ	286	;# 
+   150     011E                     TXSTA1          equ	286	;# 
+   151     011E                     TXSTA           equ	286	;# 
+   152     011F                     BAUD1CON        equ	287	;# 
+   153     011F                     BAUDCON1        equ	287	;# 
+   154     011F                     BAUDCTL1        equ	287	;# 
+   155     011F                     BAUDCON         equ	287	;# 
+   156     011F                     BAUDCTL         equ	287	;# 
+   157     018C                     SSP1BUF         equ	396	;# 
+   158     018D                     SSP1ADD         equ	397	;# 
+   159     018E                     SSP1MSK         equ	398	;# 
+   160     018F                     SSP1STAT        equ	399	;# 
+   161     0190                     SSP1CON1        equ	400	;# 
+   162     0191                     SSP1CON2        equ	401	;# 
+   163     0192                     SSP1CON3        equ	402	;# 
+   164     0196                     SSP2BUF         equ	406	;# 
+   165     0197                     SSP2ADD         equ	407	;# 
+   166     0198                     SSP2MSK         equ	408	;# 
+   167     0199                     SSP2STAT        equ	409	;# 
+   168     019A                     SSP2CON1        equ	410	;# 
+   169     019B                     SSP2CON2        equ	411	;# 
+   170     019C                     SSP2CON3        equ	412	;# 
+   171     020C                     TMR1            equ	524	;# 
+   172     020C                     TMR1L           equ	524	;# 
+   173     020D                     TMR1H           equ	525	;# 
+   174     020E                     T1CON           equ	526	;# 
+   175     020F                     T1GCON          equ	527	;# 
+   176     020F                     PR1             equ	527	;# 
+   177     0210                     T1GATE          equ	528	;# 
+   178     0210                     TMR1GATE        equ	528	;# 
+   179     0211                     T1CLK           equ	529	;# 
+   180     0211                     TMR1CLK         equ	529	;# 
+   181     0212                     TMR3            equ	530	;# 
+   182     0212                     TMR3L           equ	530	;# 
+   183     0213                     TMR3H           equ	531	;# 
+   184     0214                     T3CON           equ	532	;# 
+   185     0215                     T3GCON          equ	533	;# 
+   186     0215                     PR3             equ	533	;# 
+   187     0216                     T3GATE          equ	534	;# 
+   188     0216                     TMR3GATE        equ	534	;# 
+   189     0217                     T3CLK           equ	535	;# 
+   190     0217                     TMR3CLK         equ	535	;# 
+   191     0218                     TMR5            equ	536	;# 
+   192     0218                     TMR5L           equ	536	;# 
+   193     0219                     TMR5H           equ	537	;# 
+   194     021A                     T5CON           equ	538	;# 
+   195     021B                     T5GCON          equ	539	;# 
+   196     021B                     PR5             equ	539	;# 
+   197     021C                     T5GATE          equ	540	;# 
+   198     021C                     TMR5GATE        equ	540	;# 
+   199     021D                     T5CLK           equ	541	;# 
+   200     021D                     TMR5CLK         equ	541	;# 
+   201     021E                     CCPTMRS0        equ	542	;# 
+   202     021F                     CCPTMRS1        equ	543	;# 
+   203     028C                     T2TMR           equ	652	;# 
+   204     028C                     TMR2            equ	652	;# 
+   205     028D                     T2PR            equ	653	;# 
+   206     028D                     PR2             equ	653	;# 
+   207     028E                     T2CON           equ	654	;# 
+   208     028F                     T2HLT           equ	655	;# 
+   209     0290                     T2CLKCON        equ	656	;# 
+   210     0290                     T2CLK           equ	656	;# 
+   211     0291                     T2RST           equ	657	;# 
+   212     0292                     T4TMR           equ	658	;# 
+   213     0292                     TMR4            equ	658	;# 
+   214     0293                     T4PR            equ	659	;# 
+   215     0293                     PR4             equ	659	;# 
+   216     0294                     T4CON           equ	660	;# 
+   217     0295                     T4HLT           equ	661	;# 
+   218     0296                     T4CLKCON        equ	662	;# 
+   219     0296                     T4CLK           equ	662	;# 
+   220     0297                     T4RST           equ	663	;# 
+   221     0298                     T6TMR           equ	664	;# 
+   222     0298                     TMR6            equ	664	;# 
+   223     0299                     T6PR            equ	665	;# 
+   224     0299                     PR6             equ	665	;# 
+   225     029A                     T6CON           equ	666	;# 
+   226     029B                     T6HLT           equ	667	;# 
+   227     029C                     T6CLKCON        equ	668	;# 
+   228     029C                     T6CLK           equ	668	;# 
+   229     029D                     T6RST           equ	669	;# 
+   230     030C                     CCPR1           equ	780	;# 
+   231     030C                     CCPR1L          equ	780	;# 
+   232     030D                     CCPR1H          equ	781	;# 
+   233     030E                     CCP1CON         equ	782	;# 
+   234     030F                     CCP1CAP         equ	783	;# 
+   235     0310                     CCPR2           equ	784	;# 
+   236     0310                     CCPR2L          equ	784	;# 
+   237     0311                     CCPR2H          equ	785	;# 
+   238     0312                     CCP2CON         equ	786	;# 
+   239     0313                     CCP2CAP         equ	787	;# 
+   240     0314                     CCPR3           equ	788	;# 
+   241     0314                     CCPR3L          equ	788	;# 
+   242     0315                     CCPR3H          equ	789	;# 
+   243     0316                     CCP3CON         equ	790	;# 
+   244     0317                     CCP3CAP         equ	791	;# 
+   245     0318                     CCPR4           equ	792	;# 
+   246     0318                     CCPR4L          equ	792	;# 
+   247     0319                     CCPR4H          equ	793	;# 
+   248     031A                     CCP4CON         equ	794	;# 
+   249     031B                     CCP4CAP         equ	795	;# 
+   250     031C                     CCPR5           equ	796	;# 
+   251     031C                     CCPR5L          equ	796	;# 
+   252     031D                     CCPR5H          equ	797	;# 
+   253     031E                     CCP5CON         equ	798	;# 
+   254     031F                     CCP5CAP         equ	799	;# 
+   255     038C                     PWM6DC          equ	908	;# 
+   256     038C                     PWM6DCL         equ	908	;# 
+   257     038D                     PWM6DCH         equ	909	;# 
+   258     038E                     PWM6CON         equ	910	;# 
+   259     0390                     PWM7DC          equ	912	;# 
+   260     0390                     PWM7DCL         equ	912	;# 
+   261     0391                     PWM7DCH         equ	913	;# 
+   262     0392                     PWM7CON         equ	914	;# 
+   263     040C                     SCANLADRL       equ	1036	;# 
+   264     040D                     SCANLADRH       equ	1037	;# 
+   265     040E                     SCANHADRL       equ	1038	;# 
+   266     040F                     SCANHADRH       equ	1039	;# 
+   267     0410                     SCANCON0        equ	1040	;# 
+   268     0411                     SCANTRIG        equ	1041	;# 
+   269     0416                     CRCDATA         equ	1046	;# 
+   270     0416                     CRCDATL         equ	1046	;# 
+   271     0417                     CRCDATH         equ	1047	;# 
+   272     0418                     CRCACC          equ	1048	;# 
+   273     0418                     CRCACCL         equ	1048	;# 
+   274     0419                     CRCACCH         equ	1049	;# 
+   275     041A                     CRCSHFT         equ	1050	;# 
+   276     041A                     CRCSHIFTL       equ	1050	;# 
+   277     041B                     CRCSHIFTH       equ	1051	;# 
+   278     041C                     CRCXOR          equ	1052	;# 
+   279     041C                     CRCXORL         equ	1052	;# 
+   280     041D                     CRCXORH         equ	1053	;# 
+   281     041E                     CRCCON0         equ	1054	;# 
+   282     041F                     CRCCON1         equ	1055	;# 
+   283     048C                     SMT1TMR         equ	1164	;# 
+   284     048C                     SMT1TMRL        equ	1164	;# 
+   285     048D                     SMT1TMRH        equ	1165	;# 
+   286     048E                     SMT1TMRU        equ	1166	;# 
+   287     048F                     SMT1CPR         equ	1167	;# 
+   288     048F                     SMT1CPRL        equ	1167	;# 
+   289     0490                     SMT1CPRH        equ	1168	;# 
+   290     0491                     SMT1CPRU        equ	1169	;# 
+   291     0492                     SMT1CPW         equ	1170	;# 
+   292     0492                     SMT1CPWL        equ	1170	;# 
+   293     0493                     SMT1CPWH        equ	1171	;# 
+   294     0494                     SMT1CPWU        equ	1172	;# 
+   295     0495                     SMT1PR          equ	1173	;# 
+   296     0495                     SMT1PRL         equ	1173	;# 
+   297     0496                     SMT1PRH         equ	1174	;# 
+   298     0497                     SMT1PRU         equ	1175	;# 
+   299     0498                     SMT1CON0        equ	1176	;# 
+   300     0499                     SMT1CON1        equ	1177	;# 
+   301     049A                     SMT1STAT        equ	1178	;# 
+   302     049B                     SMT1CLK         equ	1179	;# 
+   303     049C                     SMT1SIG         equ	1180	;# 
+   304     049D                     SMT1WIN         equ	1181	;# 
+   305     050C                     SMT2TMR         equ	1292	;# 
+   306     050C                     SMT2TMRL        equ	1292	;# 
+   307     050D                     SMT2TMRH        equ	1293	;# 
+   308     050E                     SMT2TMRU        equ	1294	;# 
+   309     050F                     SMT2CPR         equ	1295	;# 
+   310     050F                     SMT2CPRL        equ	1295	;# 
+   311     0510                     SMT2CPRH        equ	1296	;# 
+   312     0511                     SMT2CPRU        equ	1297	;# 
+   313     0512                     SMT2CPW         equ	1298	;# 
+   314     0512                     SMT2CPWL        equ	1298	;# 
+   315     0513                     SMT2CPWH        equ	1299	;# 
+   316     0514                     SMT2CPWU        equ	1300	;# 
+   317     0515                     SMT2PR          equ	1301	;# 
+   318     0515                     SMT2PRL         equ	1301	;# 
+   319     0516                     SMT2PRH         equ	1302	;# 
+   320     0517                     SMT2PRU         equ	1303	;# 
+   321     0518                     SMT2CON0        equ	1304	;# 
+   322     0519                     SMT2CON1        equ	1305	;# 
+   323     051A                     SMT2STAT        equ	1306	;# 
+   324     051B                     SMT2CLK         equ	1307	;# 
+   325     051C                     SMT2SIG         equ	1308	;# 
+   326     051D                     SMT2WIN         equ	1309	;# 
+   327     058C                     NCO1ACC         equ	1420	;# 
+   328     058C                     NCO1ACCL        equ	1420	;# 
+   329     058D                     NCO1ACCH        equ	1421	;# 
+   330     058E                     NCO1ACCU        equ	1422	;# 
+   331     058F                     NCO1INC         equ	1423	;# 
+   332     058F                     NCO1INCL        equ	1423	;# 
+   333     0590                     NCO1INCH        equ	1424	;# 
+   334     0591                     NCO1INCU        equ	1425	;# 
+   335     0592                     NCO1CON         equ	1426	;# 
+   336     0593                     NCO1CLK         equ	1427	;# 
+   337     060C                     CWG1CLKCON      equ	1548	;# 
+   338     060D                     CWG1ISM         equ	1549	;# 
+   339     060E                     CWG1DBR         equ	1550	;# 
+   340     060F                     CWG1DBF         equ	1551	;# 
+   341     0610                     CWG1CON0        equ	1552	;# 
+   342     0611                     CWG1CON1        equ	1553	;# 
+   343     0612                     CWG1AS0         equ	1554	;# 
+   344     0613                     CWG1AS1         equ	1555	;# 
+   345     0614                     CWG1STR         equ	1556	;# 
+   346     0616                     CWG2CLKCON      equ	1558	;# 
+   347     0617                     CWG2ISM         equ	1559	;# 
+   348     0618                     CWG2DBR         equ	1560	;# 
+   349     0619                     CWG2DBF         equ	1561	;# 
+   350     061A                     CWG2CON0        equ	1562	;# 
+   351     061B                     CWG2CON1        equ	1563	;# 
+   352     061C                     CWG2AS0         equ	1564	;# 
+   353     061D                     CWG2AS1         equ	1565	;# 
+   354     061E                     CWG2STR         equ	1566	;# 
+   355     068C                     CWG3CLKCON      equ	1676	;# 
+   356     068D                     CWG3ISM         equ	1677	;# 
+   357     068E                     CWG3DBR         equ	1678	;# 
+   358     068F                     CWG3DBF         equ	1679	;# 
+   359     0690                     CWG3CON0        equ	1680	;# 
+   360     0691                     CWG3CON1        equ	1681	;# 
+   361     0692                     CWG3AS0         equ	1682	;# 
+   362     0693                     CWG3AS1         equ	1683	;# 
+   363     0694                     CWG3STR         equ	1684	;# 
+   364     070C                     PIR0            equ	1804	;# 
+   365     070D                     PIR1            equ	1805	;# 
+   366     070E                     PIR2            equ	1806	;# 
+   367     070F                     PIR3            equ	1807	;# 
+   368     0710                     PIR4            equ	1808	;# 
+   369     0711                     PIR5            equ	1809	;# 
+   370     0712                     PIR6            equ	1810	;# 
+   371     0713                     PIR7            equ	1811	;# 
+   372     0714                     PIR8            equ	1812	;# 
+   373     0716                     PIE0            equ	1814	;# 
+   374     0717                     PIE1            equ	1815	;# 
+   375     0718                     PIE2            equ	1816	;# 
+   376     0719                     PIE3            equ	1817	;# 
+   377     071A                     PIE4            equ	1818	;# 
+   378     071B                     PIE5            equ	1819	;# 
+   379     071C                     PIE6            equ	1820	;# 
+   380     071D                     PIE7            equ	1821	;# 
+   381     071E                     PIE8            equ	1822	;# 
+   382     0796                     PMD0            equ	1942	;# 
+   383     0797                     PMD1            equ	1943	;# 
+   384     0798                     PMD2            equ	1944	;# 
+   385     0799                     PMD3            equ	1945	;# 
+   386     079A                     PMD4            equ	1946	;# 
+   387     079B                     PMD5            equ	1947	;# 
+   388     080C                     WDTCON0         equ	2060	;# 
+   389     080D                     WDTCON1         equ	2061	;# 
+   390     080E                     WDTPSL          equ	2062	;# 
+   391     080F                     WDTPSH          equ	2063	;# 
+   392     0810                     WDTTMR          equ	2064	;# 
+   393     0811                     BORCON          equ	2065	;# 
+   394     0812                     VREGCON         equ	2066	;# 
+   395     0813                     PCON0           equ	2067	;# 
+   396     0814                     CCDCON          equ	2068	;# 
+   397     081A                     NVMADRL         equ	2074	;# 
+   398     081B                     NVMADRH         equ	2075	;# 
+   399     081C                     NVMDATL         equ	2076	;# 
+   400     081D                     NVMDATH         equ	2077	;# 
+   401     081E                     NVMCON1         equ	2078	;# 
+   402     081F                     NVMCON2         equ	2079	;# 
+   403     088C                     CPUDOZE         equ	2188	;# 
+   404     088D                     OSCCON1         equ	2189	;# 
+   405     088E                     OSCCON2         equ	2190	;# 
+   406     088F                     OSCCON3         equ	2191	;# 
+   407     0890                     OSCSTAT         equ	2192	;# 
+   408     0891                     OSCEN           equ	2193	;# 
+   409     0892                     OSCTUNE         equ	2194	;# 
+   410     0893                     OSCFRQ          equ	2195	;# 
+   411     0895                     CLKRCON         equ	2197	;# 
+   412     0896                     CLKRCLK         equ	2198	;# 
+   413     0897                     MDCON0          equ	2199	;# 
+   414     0898                     MDCON1          equ	2200	;# 
+   415     0899                     MDSRC           equ	2201	;# 
+   416     089A                     MDCARL          equ	2202	;# 
+   417     089B                     MDCARH          equ	2203	;# 
+   418     090C                     FVRCON          equ	2316	;# 
+   419     090E                     DAC1CON0        equ	2318	;# 
+   420     090F                     DAC1CON1        equ	2319	;# 
+   421     091F                     ZCD1CON         equ	2335	;# 
+   422     091F                     ZCDCON          equ	2335	;# 
+   423     098F                     CMOUT           equ	2447	;# 
+   424     098F                     CMSTAT          equ	2447	;# 
+   425     0990                     CM1CON0         equ	2448	;# 
+   426     0991                     CM1CON1         equ	2449	;# 
+   427     0992                     CM1NSEL         equ	2450	;# 
+   428     0993                     CM1PSEL         equ	2451	;# 
+   429     0994                     CM2CON0         equ	2452	;# 
+   430     0995                     CM2CON1         equ	2453	;# 
+   431     0996                     CM2NSEL         equ	2454	;# 
+   432     0997                     CM2PSEL         equ	2455	;# 
+   433     0E0F                     CLCDATA         equ	3599	;# 
+   434     0E10                     CLC1CON         equ	3600	;# 
+   435     0E11                     CLC1POL         equ	3601	;# 
+   436     0E12                     CLC1SEL0        equ	3602	;# 
+   437     0E13                     CLC1SEL1        equ	3603	;# 
+   438     0E14                     CLC1SEL2        equ	3604	;# 
+   439     0E15                     CLC1SEL3        equ	3605	;# 
+   440     0E16                     CLC1GLS0        equ	3606	;# 
+   441     0E17                     CLC1GLS1        equ	3607	;# 
+   442     0E18                     CLC1GLS2        equ	3608	;# 
+   443     0E19                     CLC1GLS3        equ	3609	;# 
+   444     0E1A                     CLC2CON         equ	3610	;# 
+   445     0E1B                     CLC2POL         equ	3611	;# 
+   446     0E1C                     CLC2SEL0        equ	3612	;# 
+   447     0E1D                     CLC2SEL1        equ	3613	;# 
+   448     0E1E                     CLC2SEL2        equ	3614	;# 
+   449     0E1F                     CLC2SEL3        equ	3615	;# 
+   450     0E20                     CLC2GLS0        equ	3616	;# 
+   451     0E21                     CLC2GLS1        equ	3617	;# 
+   452     0E22                     CLC2GLS2        equ	3618	;# 
+   453     0E23                     CLC2GLS3        equ	3619	;# 
+   454     0E24                     CLC3CON         equ	3620	;# 
+   455     0E25                     CLC3POL         equ	3621	;# 
+   456     0E26                     CLC3SEL0        equ	3622	;# 
+   457     0E27                     CLC3SEL1        equ	3623	;# 
+   458     0E28                     CLC3SEL2        equ	3624	;# 
+   459     0E29                     CLC3SEL3        equ	3625	;# 
+   460     0E2A                     CLC3GLS0        equ	3626	;# 
+   461     0E2B                     CLC3GLS1        equ	3627	;# 
+   462     0E2C                     CLC3GLS2        equ	3628	;# 
+   463     0E2D                     CLC3GLS3        equ	3629	;# 
+   464     0E2E                     CLC4CON         equ	3630	;# 
+   465     0E2F                     CLC4POL         equ	3631	;# 
+   466     0E30                     CLC4SEL0        equ	3632	;# 
+   467     0E31                     CLC4SEL1        equ	3633	;# 
+   468     0E32                     CLC4SEL2        equ	3634	;# 
+   469     0E33                     CLC4SEL3        equ	3635	;# 
+   470     0E34                     CLC4GLS0        equ	3636	;# 
+   471     0E35                     CLC4GLS1        equ	3637	;# 
+   472     0E36                     CLC4GLS2        equ	3638	;# 
+   473     0E37                     CLC4GLS3        equ	3639	;# 
+   474     0E8F                     PPSLOCK         equ	3727	;# 
+   475     0E90                     INTPPS          equ	3728	;# 
+   476     0E91                     T0CKIPPS        equ	3729	;# 
+   477     0E92                     T1CKIPPS        equ	3730	;# 
+   478     0E93                     T1GPPS          equ	3731	;# 
+   479     0E94                     T3CKIPPS        equ	3732	;# 
+   480     0E95                     T3GPPS          equ	3733	;# 
+   481     0E96                     T5CKIPPS        equ	3734	;# 
+   482     0E97                     T5GPPS          equ	3735	;# 
+   483     0E9C                     T2AINPPS        equ	3740	;# 
+   484     0E9D                     T4AINPPS        equ	3741	;# 
+   485     0E9E                     T6AINPPS        equ	3742	;# 
+   486     0EA1                     CCP1PPS         equ	3745	;# 
+   487     0EA2                     CCP2PPS         equ	3746	;# 
+   488     0EA3                     CCP3PPS         equ	3747	;# 
+   489     0EA4                     CCP4PPS         equ	3748	;# 
+   490     0EA5                     CCP5PPS         equ	3749	;# 
+   491     0EA9                     SMT1WINPPS      equ	3753	;# 
+   492     0EAA                     SMT1SIGPPS      equ	3754	;# 
+   493     0EAB                     SMT2WINPPS      equ	3755	;# 
+   494     0EAC                     SMT2SIGPPS      equ	3756	;# 
+   495     0EB1                     CWG1PPS         equ	3761	;# 
+   496     0EB2                     CWG2PPS         equ	3762	;# 
+   497     0EB3                     CWG3PPS         equ	3763	;# 
+   498     0EB8                     MDCARLPPS       equ	3768	;# 
+   499     0EB9                     MDCARHPPS       equ	3769	;# 
+   500     0EBA                     MDSRCPPS        equ	3770	;# 
+   501     0EBB                     CLCIN0PPS       equ	3771	;# 
+   502     0EBC                     CLCIN1PPS       equ	3772	;# 
+   503     0EBD                     CLCIN2PPS       equ	3773	;# 
+   504     0EBE                     CLCIN3PPS       equ	3774	;# 
+   505     0EC3                     ADCACTPPS       equ	3779	;# 
+   506     0EC5                     SSP1CLKPPS      equ	3781	;# 
+   507     0EC6                     SSP1DATPPS      equ	3782	;# 
+   508     0EC7                     SSP1SSPPS       equ	3783	;# 
+   509     0EC8                     SSP2CLKPPS      equ	3784	;# 
+   510     0EC9                     SSP2DATPPS      equ	3785	;# 
+   511     0ECA                     SSP2SSPPS       equ	3786	;# 
+   512     0ECB                     RXPPS           equ	3787	;# 
+   513     0ECC                     TXPPS           equ	3788	;# 
+   514     0F10                     RA0PPS          equ	3856	;# 
+   515     0F11                     RA1PPS          equ	3857	;# 
+   516     0F12                     RA2PPS          equ	3858	;# 
+   517     0F13                     RA3PPS          equ	3859	;# 
+   518     0F14                     RA4PPS          equ	3860	;# 
+   519     0F15                     RA5PPS          equ	3861	;# 
+   520     0F16                     RA6PPS          equ	3862	;# 
+   521     0F17                     RA7PPS          equ	3863	;# 
+   522     0F18                     RB0PPS          equ	3864	;# 
+   523     0F19                     RB1PPS          equ	3865	;# 
+   524     0F1A                     RB2PPS          equ	3866	;# 
+   525     0F1B                     RB3PPS          equ	3867	;# 
+   526     0F1C                     RB4PPS          equ	3868	;# 
+   527     0F1D                     RB5PPS          equ	3869	;# 
+   528     0F1E                     RB6PPS          equ	3870	;# 
+   529     0F1F                     RB7PPS          equ	3871	;# 
+   530     0F20                     RC0PPS          equ	3872	;# 
+   531     0F21                     RC1PPS          equ	3873	;# 
+   532     0F22                     RC2PPS          equ	3874	;# 
+   533     0F23                     RC3PPS          equ	3875	;# 
+   534     0F24                     RC4PPS          equ	3876	;# 
+   535     0F25                     RC5PPS          equ	3877	;# 
+   536     0F26                     RC6PPS          equ	3878	;# 
+   537     0F27                     RC7PPS          equ	3879	;# 
+   538     0F38                     ANSELA          equ	3896	;# 
+   539     0F39                     WPUA            equ	3897	;# 
+   540     0F3A                     ODCONA          equ	3898	;# 
+   541     0F3B                     SLRCONA         equ	3899	;# 
+   542     0F3C                     INLVLA          equ	3900	;# 
+   543     0F3D                     IOCAP           equ	3901	;# 
+   544     0F3E                     IOCAN           equ	3902	;# 
+   545     0F3F                     IOCAF           equ	3903	;# 
+   546     0F40                     CCDNA           equ	3904	;# 
+   547     0F41                     CCDPA           equ	3905	;# 
+   548     0F43                     ANSELB          equ	3907	;# 
+   549     0F44                     WPUB            equ	3908	;# 
+   550     0F45                     ODCONB          equ	3909	;# 
+   551     0F46                     SLRCONB         equ	3910	;# 
+   552     0F47                     INLVLB          equ	3911	;# 
+   553     0F48                     IOCBP           equ	3912	;# 
+   554     0F49                     IOCBN           equ	3913	;# 
+   555     0F4A                     IOCBF           equ	3914	;# 
+   556     0F4B                     CCDNB           equ	3915	;# 
+   557     0F4C                     CCDPB           equ	3916	;# 
+   558     0F4E                     ANSELC          equ	3918	;# 
+   559     0F4F                     WPUC            equ	3919	;# 
+   560     0F50                     ODCONC          equ	3920	;# 
+   561     0F51                     SLRCONC         equ	3921	;# 
+   562     0F52                     INLVLC          equ	3922	;# 
+   563     0F53                     IOCCP           equ	3923	;# 
+   564     0F54                     IOCCN           equ	3924	;# 
+   565     0F55                     IOCCF           equ	3925	;# 
+   566     0F56                     CCDNC           equ	3926	;# 
+   567     0F57                     CCDPC           equ	3927	;# 
+   568     0F65                     WPUE            equ	3941	;# 
+   569     0F68                     INLVLE          equ	3944	;# 
+   570     0F69                     IOCEP           equ	3945	;# 
+   571     0F6A                     IOCEN           equ	3946	;# 
+   572     0F6B                     IOCEF           equ	3947	;# 
+   573     0FE4                     STATUS_SHAD     equ	4068	;# 
+   574     0FE5                     WREG_SHAD       equ	4069	;# 
+   575     0FE6                     BSR_SHAD        equ	4070	;# 
+   576     0FE7                     PCLATH_SHAD     equ	4071	;# 
+   577     0FE8                     FSR0L_SHAD      equ	4072	;# 
+   578     0FE9                     FSR0H_SHAD      equ	4073	;# 
+   579     0FEA                     FSR1L_SHAD      equ	4074	;# 
+   580     0FEB                     FSR1H_SHAD      equ	4075	;# 
+   581     0FED                     STKPTR          equ	4077	;# 
+   582     0FEE                     TOSL            equ	4078	;# 
+   583     0FEF                     TOSH            equ	4079	;# 
+   584     0000                     INDF0           equ	0	;# 
+   585     0001                     INDF1           equ	1	;# 
+   586     0002                     PCL             equ	2	;# 
+   587     0003                     STATUS          equ	3	;# 
+   588     0004                     FSR0L           equ	4	;# 
+   589     0005                     FSR0H           equ	5	;# 
+   590     0006                     FSR1L           equ	6	;# 
+   591     0007                     FSR1H           equ	7	;# 
+   592     0008                     BSR             equ	8	;# 
+   593     0009                     WREG            equ	9	;# 
+   594     000A                     PCLATH          equ	10	;# 
+   595     000B                     INTCON          equ	11	;# 
+   596     000C                     PORTA           equ	12	;# 
+   597     000D                     PORTB           equ	13	;# 
+   598     000E                     PORTC           equ	14	;# 
+   599     0010                     PORTE           equ	16	;# 
+   600     0011                     TRISA           equ	17	;# 
+   601     0012                     TRISB           equ	18	;# 
+   602     0013                     TRISC           equ	19	;# 
+   603     0016                     LATA            equ	22	;# 
+   604     0017                     LATB            equ	23	;# 
+   605     0018                     LATC            equ	24	;# 
+   606     001C                     TMR0L           equ	28	;# 
+   607     001C                     TMR0            equ	28	;# 
+   608     001D                     TMR0H           equ	29	;# 
+   609     001D                     PR0             equ	29	;# 
+   610     001E                     T0CON0          equ	30	;# 
+   611     001F                     T0CON1          equ	31	;# 
+   612     008C                     ADRES           equ	140	;# 
+   613     008C                     ADRESL          equ	140	;# 
+   614     008D                     ADRESH          equ	141	;# 
+   615     008E                     ADPREV          equ	142	;# 
+   616     008E                     ADPREVL         equ	142	;# 
+   617     008F                     ADPREVH         equ	143	;# 
+   618     0090                     ADACC           equ	144	;# 
+   619     0090                     ADACCL          equ	144	;# 
+   620     0091                     ADACCH          equ	145	;# 
+   621     0093                     ADCON0          equ	147	;# 
+   622     0094                     ADCON1          equ	148	;# 
+   623     0095                     ADCON2          equ	149	;# 
+   624     0096                     ADCON3          equ	150	;# 
+   625     0097                     ADSTAT          equ	151	;# 
+   626     0098                     ADCLK           equ	152	;# 
+   627     0099                     ADACT           equ	153	;# 
+   628     009A                     ADREF           equ	154	;# 
+   629     009B                     ADCAP           equ	155	;# 
+   630     009C                     ADPRE           equ	156	;# 
+   631     009D                     ADACQ           equ	157	;# 
+   632     009E                     ADPCH           equ	158	;# 
+   633     010C                     ADCNT           equ	268	;# 
+   634     010D                     ADRPT           equ	269	;# 
+   635     010E                     ADLTH           equ	270	;# 
+   636     010E                     ADLTHL          equ	270	;# 
+   637     010F                     ADLTHH          equ	271	;# 
+   638     0110                     ADUTH           equ	272	;# 
+   639     0110                     ADUTHL          equ	272	;# 
+   640     0111                     ADUTHH          equ	273	;# 
+   641     0112                     ADSTPT          equ	274	;# 
+   642     0112                     ADSTPTL         equ	274	;# 
+   643     0113                     ADSTPTH         equ	275	;# 
+   644     0114                     ADFLTR          equ	276	;# 
+   645     0114                     ADFLTRL         equ	276	;# 
+   646     0115                     ADFLTRH         equ	277	;# 
+   647     0116                     ADERR           equ	278	;# 
+   648     0116                     ADERRL          equ	278	;# 
+   649     0117                     ADERRH          equ	279	;# 
+   650     0119                     RC1REG          equ	281	;# 
+   651     0119                     RCREG           equ	281	;# 
+   652     0119                     RCREG1          equ	281	;# 
+   653     011A                     TX1REG          equ	282	;# 
+   654     011A                     TXREG1          equ	282	;# 
+   655     011A                     TXREG           equ	282	;# 
+   656     011B                     SP1BRG          equ	283	;# 
+   657     011B                     SPBRG           equ	283	;# 
+   658     011B                     SP1BRGL         equ	283	;# 
+   659     011B                     SPBRG1          equ	283	;# 
+   660     011B                     SPBRGL          equ	283	;# 
+   661     011C                     SP1BRGH         equ	284	;# 
+   662     011C                     SPBRGH          equ	284	;# 
+   663     011C                     SPBRGH1         equ	284	;# 
+   664     011D                     RC1STA          equ	285	;# 
+   665     011D                     RCSTA1          equ	285	;# 
+   666     011D                     RCSTA           equ	285	;# 
+   667     011E                     TX1STA          equ	286	;# 
+   668     011E                     TXSTA1          equ	286	;# 
+   669     011E                     TXSTA           equ	286	;# 
+   670     011F                     BAUD1CON        equ	287	;# 
+   671     011F                     BAUDCON1        equ	287	;# 
+   672     011F                     BAUDCTL1        equ	287	;# 
+   673     011F                     BAUDCON         equ	287	;# 
+   674     011F                     BAUDCTL         equ	287	;# 
+   675     018C                     SSP1BUF         equ	396	;# 
+   676     018D                     SSP1ADD         equ	397	;# 
+   677     018E                     SSP1MSK         equ	398	;# 
+   678     018F                     SSP1STAT        equ	399	;# 
+   679     0190                     SSP1CON1        equ	400	;# 
+   680     0191                     SSP1CON2        equ	401	;# 
+   681     0192                     SSP1CON3        equ	402	;# 
+   682     0196                     SSP2BUF         equ	406	;# 
+   683     0197                     SSP2ADD         equ	407	;# 
+   684     0198                     SSP2MSK         equ	408	;# 
+   685     0199                     SSP2STAT        equ	409	;# 
+   686     019A                     SSP2CON1        equ	410	;# 
+   687     019B                     SSP2CON2        equ	411	;# 
+   688     019C                     SSP2CON3        equ	412	;# 
+   689     020C                     TMR1            equ	524	;# 
+   690     020C                     TMR1L           equ	524	;# 
+   691     020D                     TMR1H           equ	525	;# 
+   692     020E                     T1CON           equ	526	;# 
+   693     020F                     T1GCON          equ	527	;# 
+   694     020F                     PR1             equ	527	;# 
+   695     0210                     T1GATE          equ	528	;# 
+   696     0210                     TMR1GATE        equ	528	;# 
+   697     0211                     T1CLK           equ	529	;# 
+   698     0211                     TMR1CLK         equ	529	;# 
+   699     0212                     TMR3            equ	530	;# 
+   700     0212                     TMR3L           equ	530	;# 
+   701     0213                     TMR3H           equ	531	;# 
+   702     0214                     T3CON           equ	532	;# 
+   703     0215                     T3GCON          equ	533	;# 
+   704     0215                     PR3             equ	533	;# 
+   705     0216                     T3GATE          equ	534	;# 
+   706     0216                     TMR3GATE        equ	534	;# 
+   707     0217                     T3CLK           equ	535	;# 
+   708     0217                     TMR3CLK         equ	535	;# 
+   709     0218                     TMR5            equ	536	;# 
+   710     0218                     TMR5L           equ	536	;# 
+   711     0219                     TMR5H           equ	537	;# 
+   712     021A                     T5CON           equ	538	;# 
+   713     021B                     T5GCON          equ	539	;# 
+   714     021B                     PR5             equ	539	;# 
+   715     021C                     T5GATE          equ	540	;# 
+   716     021C                     TMR5GATE        equ	540	;# 
+   717     021D                     T5CLK           equ	541	;# 
+   718     021D                     TMR5CLK         equ	541	;# 
+   719     021E                     CCPTMRS0        equ	542	;# 
+   720     021F                     CCPTMRS1        equ	543	;# 
+   721     028C                     T2TMR           equ	652	;# 
+   722     028C                     TMR2            equ	652	;# 
+   723     028D                     T2PR            equ	653	;# 
+   724     028D                     PR2             equ	653	;# 
+   725     028E                     T2CON           equ	654	;# 
+   726     028F                     T2HLT           equ	655	;# 
+   727     0290                     T2CLKCON        equ	656	;# 
+   728     0290                     T2CLK           equ	656	;# 
+   729     0291                     T2RST           equ	657	;# 
+   730     0292                     T4TMR           equ	658	;# 
+   731     0292                     TMR4            equ	658	;# 
+   732     0293                     T4PR            equ	659	;# 
+   733     0293                     PR4             equ	659	;# 
+   734     0294                     T4CON           equ	660	;# 
+   735     0295                     T4HLT           equ	661	;# 
+   736     0296                     T4CLKCON        equ	662	;# 
+   737     0296                     T4CLK           equ	662	;# 
+   738     0297                     T4RST           equ	663	;# 
+   739     0298                     T6TMR           equ	664	;# 
+   740     0298                     TMR6            equ	664	;# 
+   741     0299                     T6PR            equ	665	;# 
+   742     0299                     PR6             equ	665	;# 
+   743     029A                     T6CON           equ	666	;# 
+   744     029B                     T6HLT           equ	667	;# 
+   745     029C                     T6CLKCON        equ	668	;# 
+   746     029C                     T6CLK           equ	668	;# 
+   747     029D                     T6RST           equ	669	;# 
+   748     030C                     CCPR1           equ	780	;# 
+   749     030C                     CCPR1L          equ	780	;# 
+   750     030D                     CCPR1H          equ	781	;# 
+   751     030E                     CCP1CON         equ	782	;# 
+   752     030F                     CCP1CAP         equ	783	;# 
+   753     0310                     CCPR2           equ	784	;# 
+   754     0310                     CCPR2L          equ	784	;# 
+   755     0311                     CCPR2H          equ	785	;# 
+   756     0312                     CCP2CON         equ	786	;# 
+   757     0313                     CCP2CAP         equ	787	;# 
+   758     0314                     CCPR3           equ	788	;# 
+   759     0314                     CCPR3L          equ	788	;# 
+   760     0315                     CCPR3H          equ	789	;# 
+   761     0316                     CCP3CON         equ	790	;# 
+   762     0317                     CCP3CAP         equ	791	;# 
+   763     0318                     CCPR4           equ	792	;# 
+   764     0318                     CCPR4L          equ	792	;# 
+   765     0319                     CCPR4H          equ	793	;# 
+   766     031A                     CCP4CON         equ	794	;# 
+   767     031B                     CCP4CAP         equ	795	;# 
+   768     031C                     CCPR5           equ	796	;# 
+   769     031C                     CCPR5L          equ	796	;# 
+   770     031D                     CCPR5H          equ	797	;# 
+   771     031E                     CCP5CON         equ	798	;# 
+   772     031F                     CCP5CAP         equ	799	;# 
+   773     038C                     PWM6DC          equ	908	;# 
+   774     038C                     PWM6DCL         equ	908	;# 
+   775     038D                     PWM6DCH         equ	909	;# 
+   776     038E                     PWM6CON         equ	910	;# 
+   777     0390                     PWM7DC          equ	912	;# 
+   778     0390                     PWM7DCL         equ	912	;# 
+   779     0391                     PWM7DCH         equ	913	;# 
+   780     0392                     PWM7CON         equ	914	;# 
+   781     040C                     SCANLADRL       equ	1036	;# 
+   782     040D                     SCANLADRH       equ	1037	;# 
+   783     040E                     SCANHADRL       equ	1038	;# 
+   784     040F                     SCANHADRH       equ	1039	;# 
+   785     0410                     SCANCON0        equ	1040	;# 
+   786     0411                     SCANTRIG        equ	1041	;# 
+   787     0416                     CRCDATA         equ	1046	;# 
+   788     0416                     CRCDATL         equ	1046	;# 
+   789     0417                     CRCDATH         equ	1047	;# 
+   790     0418                     CRCACC          equ	1048	;# 
+   791     0418                     CRCACCL         equ	1048	;# 
+   792     0419                     CRCACCH         equ	1049	;# 
+   793     041A                     CRCSHFT         equ	1050	;# 
+   794     041A                     CRCSHIFTL       equ	1050	;# 
+   795     041B                     CRCSHIFTH       equ	1051	;# 
+   796     041C                     CRCXOR          equ	1052	;# 
+   797     041C                     CRCXORL         equ	1052	;# 
+   798     041D                     CRCXORH         equ	1053	;# 
+   799     041E                     CRCCON0         equ	1054	;# 
+   800     041F                     CRCCON1         equ	1055	;# 
+   801     048C                     SMT1TMR         equ	1164	;# 
+   802     048C                     SMT1TMRL        equ	1164	;# 
+   803     048D                     SMT1TMRH        equ	1165	;# 
+   804     048E                     SMT1TMRU        equ	1166	;# 
+   805     048F                     SMT1CPR         equ	1167	;# 
+   806     048F                     SMT1CPRL        equ	1167	;# 
+   807     0490                     SMT1CPRH        equ	1168	;# 
+   808     0491                     SMT1CPRU        equ	1169	;# 
+   809     0492                     SMT1CPW         equ	1170	;# 
+   810     0492                     SMT1CPWL        equ	1170	;# 
+   811     0493                     SMT1CPWH        equ	1171	;# 
+   812     0494                     SMT1CPWU        equ	1172	;# 
+   813     0495                     SMT1PR          equ	1173	;# 
+   814     0495                     SMT1PRL         equ	1173	;# 
+   815     0496                     SMT1PRH         equ	1174	;# 
+   816     0497                     SMT1PRU         equ	1175	;# 
+   817     0498                     SMT1CON0        equ	1176	;# 
+   818     0499                     SMT1CON1        equ	1177	;# 
+   819     049A                     SMT1STAT        equ	1178	;# 
+   820     049B                     SMT1CLK         equ	1179	;# 
+   821     049C                     SMT1SIG         equ	1180	;# 
+   822     049D                     SMT1WIN         equ	1181	;# 
+   823     050C                     SMT2TMR         equ	1292	;# 
+   824     050C                     SMT2TMRL        equ	1292	;# 
+   825     050D                     SMT2TMRH        equ	1293	;# 
+   826     050E                     SMT2TMRU        equ	1294	;# 
+   827     050F                     SMT2CPR         equ	1295	;# 
+   828     050F                     SMT2CPRL        equ	1295	;# 
+   829     0510                     SMT2CPRH        equ	1296	;# 
+   830     0511                     SMT2CPRU        equ	1297	;# 
+   831     0512                     SMT2CPW         equ	1298	;# 
+   832     0512                     SMT2CPWL        equ	1298	;# 
+   833     0513                     SMT2CPWH        equ	1299	;# 
+   834     0514                     SMT2CPWU        equ	1300	;# 
+   835     0515                     SMT2PR          equ	1301	;# 
+   836     0515                     SMT2PRL         equ	1301	;# 
+   837     0516                     SMT2PRH         equ	1302	;# 
+   838     0517                     SMT2PRU         equ	1303	;# 
+   839     0518                     SMT2CON0        equ	1304	;# 
+   840     0519                     SMT2CON1        equ	1305	;# 
+   841     051A                     SMT2STAT        equ	1306	;# 
+   842     051B                     SMT2CLK         equ	1307	;# 
+   843     051C                     SMT2SIG         equ	1308	;# 
+   844     051D                     SMT2WIN         equ	1309	;# 
+   845     058C                     NCO1ACC         equ	1420	;# 
+   846     058C                     NCO1ACCL        equ	1420	;# 
+   847     058D                     NCO1ACCH        equ	1421	;# 
+   848     058E                     NCO1ACCU        equ	1422	;# 
+   849     058F                     NCO1INC         equ	1423	;# 
+   850     058F                     NCO1INCL        equ	1423	;# 
+   851     0590                     NCO1INCH        equ	1424	;# 
+   852     0591                     NCO1INCU        equ	1425	;# 
+   853     0592                     NCO1CON         equ	1426	;# 
+   854     0593                     NCO1CLK         equ	1427	;# 
+   855     060C                     CWG1CLKCON      equ	1548	;# 
+   856     060D                     CWG1ISM         equ	1549	;# 
+   857     060E                     CWG1DBR         equ	1550	;# 
+   858     060F                     CWG1DBF         equ	1551	;# 
+   859     0610                     CWG1CON0        equ	1552	;# 
+   860     0611                     CWG1CON1        equ	1553	;# 
+   861     0612                     CWG1AS0         equ	1554	;# 
+   862     0613                     CWG1AS1         equ	1555	;# 
+   863     0614                     CWG1STR         equ	1556	;# 
+   864     0616                     CWG2CLKCON      equ	1558	;# 
+   865     0617                     CWG2ISM         equ	1559	;# 
+   866     0618                     CWG2DBR         equ	1560	;# 
+   867     0619                     CWG2DBF         equ	1561	;# 
+   868     061A                     CWG2CON0        equ	1562	;# 
+   869     061B                     CWG2CON1        equ	1563	;# 
+   870     061C                     CWG2AS0         equ	1564	;# 
+   871     061D                     CWG2AS1         equ	1565	;# 
+   872     061E                     CWG2STR         equ	1566	;# 
+   873     068C                     CWG3CLKCON      equ	1676	;# 
+   874     068D                     CWG3ISM         equ	1677	;# 
+   875     068E                     CWG3DBR         equ	1678	;# 
+   876     068F                     CWG3DBF         equ	1679	;# 
+   877     0690                     CWG3CON0        equ	1680	;# 
+   878     0691                     CWG3CON1        equ	1681	;# 
+   879     0692                     CWG3AS0         equ	1682	;# 
+   880     0693                     CWG3AS1         equ	1683	;# 
+   881     0694                     CWG3STR         equ	1684	;# 
+   882     070C                     PIR0            equ	1804	;# 
+   883     070D                     PIR1            equ	1805	;# 
+   884     070E                     PIR2            equ	1806	;# 
+   885     070F                     PIR3            equ	1807	;# 
+   886     0710                     PIR4            equ	1808	;# 
+   887     0711                     PIR5            equ	1809	;# 
+   888     0712                     PIR6            equ	1810	;# 
+   889     0713                     PIR7            equ	1811	;# 
+   890     0714                     PIR8            equ	1812	;# 
+   891     0716                     PIE0            equ	1814	;# 
+   892     0717                     PIE1            equ	1815	;# 
+   893     0718                     PIE2            equ	1816	;# 
+   894     0719                     PIE3            equ	1817	;# 
+   895     071A                     PIE4            equ	1818	;# 
+   896     071B                     PIE5            equ	1819	;# 
+   897     071C                     PIE6            equ	1820	;# 
+   898     071D                     PIE7            equ	1821	;# 
+   899     071E                     PIE8            equ	1822	;# 
+   900     0796                     PMD0            equ	1942	;# 
+   901     0797                     PMD1            equ	1943	;# 
+   902     0798                     PMD2            equ	1944	;# 
+   903     0799                     PMD3            equ	1945	;# 
+   904     079A                     PMD4            equ	1946	;# 
+   905     079B                     PMD5            equ	1947	;# 
+   906     080C                     WDTCON0         equ	2060	;# 
+   907     080D                     WDTCON1         equ	2061	;# 
+   908     080E                     WDTPSL          equ	2062	;# 
+   909     080F                     WDTPSH          equ	2063	;# 
+   910     0810                     WDTTMR          equ	2064	;# 
+   911     0811                     BORCON          equ	2065	;# 
+   912     0812                     VREGCON         equ	2066	;# 
+   913     0813                     PCON0           equ	2067	;# 
+   914     0814                     CCDCON          equ	2068	;# 
+   915     081A                     NVMADRL         equ	2074	;# 
+   916     081B                     NVMADRH         equ	2075	;# 
+   917     081C                     NVMDATL         equ	2076	;# 
+   918     081D                     NVMDATH         equ	2077	;# 
+   919     081E                     NVMCON1         equ	2078	;# 
+   920     081F                     NVMCON2         equ	2079	;# 
+   921     088C                     CPUDOZE         equ	2188	;# 
+   922     088D                     OSCCON1         equ	2189	;# 
+   923     088E                     OSCCON2         equ	2190	;# 
+   924     088F                     OSCCON3         equ	2191	;# 
+   925     0890                     OSCSTAT         equ	2192	;# 
+   926     0891                     OSCEN           equ	2193	;# 
+   927     0892                     OSCTUNE         equ	2194	;# 
+   928     0893                     OSCFRQ          equ	2195	;# 
+   929     0895                     CLKRCON         equ	2197	;# 
+   930     0896                     CLKRCLK         equ	2198	;# 
+   931     0897                     MDCON0          equ	2199	;# 
+   932     0898                     MDCON1          equ	2200	;# 
+   933     0899                     MDSRC           equ	2201	;# 
+   934     089A                     MDCARL          equ	2202	;# 
+   935     089B                     MDCARH          equ	2203	;# 
+   936     090C                     FVRCON          equ	2316	;# 
+   937     090E                     DAC1CON0        equ	2318	;# 
+   938     090F                     DAC1CON1        equ	2319	;# 
+   939     091F                     ZCD1CON         equ	2335	;# 
+   940     091F                     ZCDCON          equ	2335	;# 
+   941     098F                     CMOUT           equ	2447	;# 
+   942     098F                     CMSTAT          equ	2447	;# 
+   943     0990                     CM1CON0         equ	2448	;# 
+   944     0991                     CM1CON1         equ	2449	;# 
+   945     0992                     CM1NSEL         equ	2450	;# 
+   946     0993                     CM1PSEL         equ	2451	;# 
+   947     0994                     CM2CON0         equ	2452	;# 
+   948     0995                     CM2CON1         equ	2453	;# 
+   949     0996                     CM2NSEL         equ	2454	;# 
+   950     0997                     CM2PSEL         equ	2455	;# 
+   951     0E0F                     CLCDATA         equ	3599	;# 
+   952     0E10                     CLC1CON         equ	3600	;# 
+   953     0E11                     CLC1POL         equ	3601	;# 
+   954     0E12                     CLC1SEL0        equ	3602	;# 
+   955     0E13                     CLC1SEL1        equ	3603	;# 
+   956     0E14                     CLC1SEL2        equ	3604	;# 
+   957     0E15                     CLC1SEL3        equ	3605	;# 
+   958     0E16                     CLC1GLS0        equ	3606	;# 
+   959     0E17                     CLC1GLS1        equ	3607	;# 
+   960     0E18                     CLC1GLS2        equ	3608	;# 
+   961     0E19                     CLC1GLS3        equ	3609	;# 
+   962     0E1A                     CLC2CON         equ	3610	;# 
+   963     0E1B                     CLC2POL         equ	3611	;# 
+   964     0E1C                     CLC2SEL0        equ	3612	;# 
+   965     0E1D                     CLC2SEL1        equ	3613	;# 
+   966     0E1E                     CLC2SEL2        equ	3614	;# 
+   967     0E1F                     CLC2SEL3        equ	3615	;# 
+   968     0E20                     CLC2GLS0        equ	3616	;# 
+   969     0E21                     CLC2GLS1        equ	3617	;# 
+   970     0E22                     CLC2GLS2        equ	3618	;# 
+   971     0E23                     CLC2GLS3        equ	3619	;# 
+   972     0E24                     CLC3CON         equ	3620	;# 
+   973     0E25                     CLC3POL         equ	3621	;# 
+   974     0E26                     CLC3SEL0        equ	3622	;# 
+   975     0E27                     CLC3SEL1        equ	3623	;# 
+   976     0E28                     CLC3SEL2        equ	3624	;# 
+   977     0E29                     CLC3SEL3        equ	3625	;# 
+   978     0E2A                     CLC3GLS0        equ	3626	;# 
+   979     0E2B                     CLC3GLS1        equ	3627	;# 
+   980     0E2C                     CLC3GLS2        equ	3628	;# 
+   981     0E2D                     CLC3GLS3        equ	3629	;# 
+   982     0E2E                     CLC4CON         equ	3630	;# 
+   983     0E2F                     CLC4POL         equ	3631	;# 
+   984     0E30                     CLC4SEL0        equ	3632	;# 
+   985     0E31                     CLC4SEL1        equ	3633	;# 
+   986     0E32                     CLC4SEL2        equ	3634	;# 
+   987     0E33                     CLC4SEL3        equ	3635	;# 
+   988     0E34                     CLC4GLS0        equ	3636	;# 
+   989     0E35                     CLC4GLS1        equ	3637	;# 
+   990     0E36                     CLC4GLS2        equ	3638	;# 
+   991     0E37                     CLC4GLS3        equ	3639	;# 
+   992     0E8F                     PPSLOCK         equ	3727	;# 
+   993     0E90                     INTPPS          equ	3728	;# 
+   994     0E91                     T0CKIPPS        equ	3729	;# 
+   995     0E92                     T1CKIPPS        equ	3730	;# 
+   996     0E93                     T1GPPS          equ	3731	;# 
+   997     0E94                     T3CKIPPS        equ	3732	;# 
+   998     0E95                     T3GPPS          equ	3733	;# 
+   999     0E96                     T5CKIPPS        equ	3734	;# 
+  1000     0E97                     T5GPPS          equ	3735	;# 
+  1001     0E9C                     T2AINPPS        equ	3740	;# 
+  1002     0E9D                     T4AINPPS        equ	3741	;# 
+  1003     0E9E                     T6AINPPS        equ	3742	;# 
+  1004     0EA1                     CCP1PPS         equ	3745	;# 
+  1005     0EA2                     CCP2PPS         equ	3746	;# 
+  1006     0EA3                     CCP3PPS         equ	3747	;# 
+  1007     0EA4                     CCP4PPS         equ	3748	;# 
+  1008     0EA5                     CCP5PPS         equ	3749	;# 
+  1009     0EA9                     SMT1WINPPS      equ	3753	;# 
+  1010     0EAA                     SMT1SIGPPS      equ	3754	;# 
+  1011     0EAB                     SMT2WINPPS      equ	3755	;# 
+  1012     0EAC                     SMT2SIGPPS      equ	3756	;# 
+  1013     0EB1                     CWG1PPS         equ	3761	;# 
+  1014     0EB2                     CWG2PPS         equ	3762	;# 
+  1015     0EB3                     CWG3PPS         equ	3763	;# 
+  1016     0EB8                     MDCARLPPS       equ	3768	;# 
+  1017     0EB9                     MDCARHPPS       equ	3769	;# 
+  1018     0EBA                     MDSRCPPS        equ	3770	;# 
+  1019     0EBB                     CLCIN0PPS       equ	3771	;# 
+  1020     0EBC                     CLCIN1PPS       equ	3772	;# 
+  1021     0EBD                     CLCIN2PPS       equ	3773	;# 
+  1022     0EBE                     CLCIN3PPS       equ	3774	;# 
+  1023     0EC3                     ADCACTPPS       equ	3779	;# 
+  1024     0EC5                     SSP1CLKPPS      equ	3781	;# 
+  1025     0EC6                     SSP1DATPPS      equ	3782	;# 
+  1026     0EC7                     SSP1SSPPS       equ	3783	;# 
+  1027     0EC8                     SSP2CLKPPS      equ	3784	;# 
+  1028     0EC9                     SSP2DATPPS      equ	3785	;# 
+  1029     0ECA                     SSP2SSPPS       equ	3786	;# 
+  1030     0ECB                     RXPPS           equ	3787	;# 
+  1031     0ECC                     TXPPS           equ	3788	;# 
+  1032     0F10                     RA0PPS          equ	3856	;# 
+  1033     0F11                     RA1PPS          equ	3857	;# 
+  1034     0F12                     RA2PPS          equ	3858	;# 
+  1035     0F13                     RA3PPS          equ	3859	;# 
+  1036     0F14                     RA4PPS          equ	3860	;# 
+  1037     0F15                     RA5PPS          equ	3861	;# 
+  1038     0F16                     RA6PPS          equ	3862	;# 
+  1039     0F17                     RA7PPS          equ	3863	;# 
+  1040     0F18                     RB0PPS          equ	3864	;# 
+  1041     0F19                     RB1PPS          equ	3865	;# 
+  1042     0F1A                     RB2PPS          equ	3866	;# 
+  1043     0F1B                     RB3PPS          equ	3867	;# 
+  1044     0F1C                     RB4PPS          equ	3868	;# 
+  1045     0F1D                     RB5PPS          equ	3869	;# 
+  1046     0F1E                     RB6PPS          equ	3870	;# 
+  1047     0F1F                     RB7PPS          equ	3871	;# 
+  1048     0F20                     RC0PPS          equ	3872	;# 
+  1049     0F21                     RC1PPS          equ	3873	;# 
+  1050     0F22                     RC2PPS          equ	3874	;# 
+  1051     0F23                     RC3PPS          equ	3875	;# 
+  1052     0F24                     RC4PPS          equ	3876	;# 
+  1053     0F25                     RC5PPS          equ	3877	;# 
+  1054     0F26                     RC6PPS          equ	3878	;# 
+  1055     0F27                     RC7PPS          equ	3879	;# 
+  1056     0F38                     ANSELA          equ	3896	;# 
+  1057     0F39                     WPUA            equ	3897	;# 
+  1058     0F3A                     ODCONA          equ	3898	;# 
+  1059     0F3B                     SLRCONA         equ	3899	;# 
+  1060     0F3C                     INLVLA          equ	3900	;# 
+  1061     0F3D                     IOCAP           equ	3901	;# 
+  1062     0F3E                     IOCAN           equ	3902	;# 
+  1063     0F3F                     IOCAF           equ	3903	;# 
+  1064     0F40                     CCDNA           equ	3904	;# 
+  1065     0F41                     CCDPA           equ	3905	;# 
+  1066     0F43                     ANSELB          equ	3907	;# 
+  1067     0F44                     WPUB            equ	3908	;# 
+  1068     0F45                     ODCONB          equ	3909	;# 
+  1069     0F46                     SLRCONB         equ	3910	;# 
+  1070     0F47                     INLVLB          equ	3911	;# 
+  1071     0F48                     IOCBP           equ	3912	;# 
+  1072     0F49                     IOCBN           equ	3913	;# 
+  1073     0F4A                     IOCBF           equ	3914	;# 
+  1074     0F4B                     CCDNB           equ	3915	;# 
+  1075     0F4C                     CCDPB           equ	3916	;# 
+  1076     0F4E                     ANSELC          equ	3918	;# 
+  1077     0F4F                     WPUC            equ	3919	;# 
+  1078     0F50                     ODCONC          equ	3920	;# 
+  1079     0F51                     SLRCONC         equ	3921	;# 
+  1080     0F52                     INLVLC          equ	3922	;# 
+  1081     0F53                     IOCCP           equ	3923	;# 
+  1082     0F54                     IOCCN           equ	3924	;# 
+  1083     0F55                     IOCCF           equ	3925	;# 
+  1084     0F56                     CCDNC           equ	3926	;# 
+  1085     0F57                     CCDPC           equ	3927	;# 
+  1086     0F65                     WPUE            equ	3941	;# 
+  1087     0F68                     INLVLE          equ	3944	;# 
+  1088     0F69                     IOCEP           equ	3945	;# 
+  1089     0F6A                     IOCEN           equ	3946	;# 
+  1090     0F6B                     IOCEF           equ	3947	;# 
+  1091     0FE4                     STATUS_SHAD     equ	4068	;# 
+  1092     0FE5                     WREG_SHAD       equ	4069	;# 
+  1093     0FE6                     BSR_SHAD        equ	4070	;# 
+  1094     0FE7                     PCLATH_SHAD     equ	4071	;# 
+  1095     0FE8                     FSR0L_SHAD      equ	4072	;# 
+  1096     0FE9                     FSR0H_SHAD      equ	4073	;# 
+  1097     0FEA                     FSR1L_SHAD      equ	4074	;# 
+  1098     0FEB                     FSR1H_SHAD      equ	4075	;# 
+  1099     0FED                     STKPTR          equ	4077	;# 
+  1100     0FEE                     TOSL            equ	4078	;# 
+  1101     0FEF                     TOSH            equ	4079	;# 
+  1102                           
+  1103                           	psect	idataCOMMON
+  1104     0084                     __pidataCOMMON:
+  1105                           
+  1106                           ;initializer for _LED
+  1107     0084  341F               	retlw	31
+  1108     0085  3400               	retlw	0
+  1109     000B                     _INTCONbits     set	11
+  1110     001F                     _T0CON1bits     set	31
+  1111     001E                     _T0CON0bits     set	30
+  1112     0012                     _TRISBbits      set	18
+  1113     070C                     _PIR0bits       set	1804
+  1114     0716                     _PIE0bits       set	1814
+  1115     090F                     _DAC1CON1bits   set	2319
+  1116     090E                     _DAC1CON0bits   set	2318
+  1117     0F43                     _ANSELBbits     set	3907
+  1118                           
+  1119                           	psect	cinit
+  1120     0047                     start_initialization:	
+  1121                           ; #config settings
+  1122                           
+  1123     0047                     __initialization:
+  1124                           
+  1125                           ; Initialize objects allocated to COMMON
+  1126     0047  3180  2084  3180   	fcall	__pidataCOMMON	;fetch initializer
+  1127     004A  00F2               	movwf	__pdataCOMMON& (0+127)
+  1128     004B  3180  2085  3180   	fcall	__pidataCOMMON+1	;fetch initializer
+  1129     004E  00F3               	movwf	(__pdataCOMMON+1)& (0+127)
+  1130                           
+  1131                           ; Clear objects allocated to COMMON
+  1132     004F  01F0               	clrf	__pbssCOMMON& (0+127)
+  1133     0050  01F1               	clrf	(__pbssCOMMON+1)& (0+127)
+  1134     0051                     end_of_initialization:	
+  1135                           ;End of C runtime variable initialization code
+  1136                           
+  1137     0051                     __end_of__initialization:
+  1138     0051  107E               	bcf	int$flags,0	;clear compiler interrupt flag (level 1)
+  1139     0052  0020               	movlb	0
+  1140     0053  3180  2855         	ljmp	_main	;jump to C main() function
+  1141                           
+  1142                           	psect	bssCOMMON
+  1143     0070                     __pbssCOMMON:
+  1144     0070                     _IN:
+  1145     0070                     	ds	2
+  1146                           
+  1147                           	psect	dataCOMMON
+  1148     0072                     __pdataCOMMON:
+  1149     0072                     _LED:
+  1150     0072                     	ds	2
+  1151                           
+  1152                           	psect	cstackCOMMON
+  1153     0000                     __pcstackCOMMON:
+  1154     0000                     ?_configPIN:
+  1155     0000                     ?_configTIMER:	
+  1156                           ; 1 bytes @ 0x0
+  1157                           
+  1158     0000                     ?_configINT:	
+  1159                           ; 1 bytes @ 0x0
+  1160                           
+  1161     0000                     ?_configDAC:	
+  1162                           ; 1 bytes @ 0x0
+  1163                           
+  1164     0000                     ?_main:	
+  1165                           ; 1 bytes @ 0x0
+  1166                           
+  1167     0000                     ?_TIMER0:	
+  1168                           ; 1 bytes @ 0x0
+  1169                           
+  1170     0000                     ??_configPIN:	
+  1171                           ; 1 bytes @ 0x0
+  1172                           
+  1173     0000                     ??_configTIMER:	
+  1174                           ; 1 bytes @ 0x0
+  1175                           
+  1176     0000                     ??_configINT:	
+  1177                           ; 1 bytes @ 0x0
+  1178                           
+  1179     0000                     ??_configDAC:	
+  1180                           ; 1 bytes @ 0x0
+  1181                           
+  1182     0000                     ??_main:	
+  1183                           ; 1 bytes @ 0x0
+  1184                           
+  1185     0000                     ??_TIMER0:	
+  1186                           ; 1 bytes @ 0x0
+  1187                           
+  1188                           
+  1189                           	psect	maintext
+  1190     0055                     __pmaintext:	
+  1191                           ; 1 bytes @ 0x0
+  1192 ;;
+  1193 ;;Main: autosize = 0, tempsize = 0, incstack = 0, save=0
+  1194 ;;
+  1195 ;; *************** function _main *****************
+  1196 ;; Defined at:
+  1197 ;;		line 92 in file "Lab5_main.c"
+  1198 ;; Parameters:    Size  Location     Type
+  1199 ;;		None
+  1200 ;; Auto vars:     Size  Location     Type
+  1201 ;;		None
+  1202 ;; Return value:  Size  Location     Type
+  1203 ;;                  1    wreg      void 
+  1204 ;; Registers used:
+  1205 ;;		wreg, status,2, status,0, pclath, cstack
+  1206 ;; Tracked objects:
+  1207 ;;		On entry : B1F/0
+  1208 ;;		On exit  : 0/0
+  1209 ;;		Unchanged: 0/0
+  1210 ;; Data sizes:     COMMON   BANK0   BANK1   BANK2   BANK3   BANK4   BANK5   BANK6   BANK7   BANK8   BANK9  BANK10  BANK1
+      +1  BANK12
+  1211 ;;      Params:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1212 ;;      Locals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1213 ;;      Temps:          0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1214 ;;      Totals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1215 ;;Total ram usage:        0 bytes
+  1216 ;; Hardware stack levels required when called: 2
+  1217 ;; This function calls:
+  1218 ;;		_configDAC
+  1219 ;;		_configINT
+  1220 ;;		_configPIN
+  1221 ;;		_configTIMER
+  1222 ;; This function is called by:
+  1223 ;;		Startup code after reset
+  1224 ;; This function uses a non-reentrant model
+  1225 ;;
+  1226                           
+  1227     0055                     _main:	
+  1228                           ;psect for function _main
+  1229                           
+  1230     0055                     l682:	
+  1231                           ;incstack = 0
+  1232                           ; Regs used in _main: [wreg+status,2+status,0+pclath+cstack]
+  1233                           
+  1234                           
+  1235                           ;Lab5_main.c: 93:     configPIN();
+  1236     0055  3180  207A  3180   	fcall	_configPIN
+  1237     0058                     l684:
+  1238                           
+  1239                           ;Lab5_main.c: 94:     configTIMER();
+  1240     0058  3180  2067  3180   	fcall	_configTIMER
+  1241     005B                     l686:
+  1242                           
+  1243                           ;Lab5_main.c: 95:     configINT();
+  1244     005B  3180  207F  3180   	fcall	_configINT
+  1245                           
+  1246                           ;Lab5_main.c: 96:     configDAC();
+  1247     005E  3180  2072  3180   	fcall	_configDAC
+  1248     0061                     l688:
+  1249                           
+  1250                           ;Lab5_main.c: 97:     T0CON0bits.T0EN = 1;
+  1251     0061  0020               	movlb	0	; select bank0
+  1252     0062  179E               	bsf	30,7	;volatile
+  1253     0063                     l690:
+  1254                           
+  1255                           ;Lab5_main.c: 100:         __nop();
+  1256     0063  0000               	nop
+  1257     0064  2863               	goto	l690
+  1258     0065  3180  2845         	ljmp	start
+  1259     0067                     __end_of_main:
+  1260                           
+  1261                           	psect	text1
+  1262     0067                     __ptext1:	
+  1263 ;; *************** function _configTIMER *****************
+  1264 ;; Defined at:
+  1265 ;;		line 58 in file "Lab5_main.c"
+  1266 ;; Parameters:    Size  Location     Type
+  1267 ;;		None
+  1268 ;; Auto vars:     Size  Location     Type
+  1269 ;;		None
+  1270 ;; Return value:  Size  Location     Type
+  1271 ;;                  1    wreg      void 
+  1272 ;; Registers used:
+  1273 ;;		wreg, status,2, status,0
+  1274 ;; Tracked objects:
+  1275 ;;		On entry : 0/0
+  1276 ;;		On exit  : 0/0
+  1277 ;;		Unchanged: 0/0
+  1278 ;; Data sizes:     COMMON   BANK0   BANK1   BANK2   BANK3   BANK4   BANK5   BANK6   BANK7   BANK8   BANK9  BANK10  BANK1
+      +1  BANK12
+  1279 ;;      Params:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1280 ;;      Locals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1281 ;;      Temps:          0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1282 ;;      Totals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1283 ;;Total ram usage:        0 bytes
+  1284 ;; Hardware stack levels used: 1
+  1285 ;; Hardware stack levels required when called: 1
+  1286 ;; This function calls:
+  1287 ;;		Nothing
+  1288 ;; This function is called by:
+  1289 ;;		_main
+  1290 ;; This function uses a non-reentrant model
+  1291 ;;
+  1292                           
+  1293     0067                     _configTIMER:	
+  1294                           ;psect for function _configTIMER
+  1295                           
+  1296     0067                     l668:	
+  1297                           ;incstack = 0
+  1298                           ; Regs used in _configTIMER: [wreg+status,2+status,0]
+  1299                           
+  1300                           
+  1301                           ;Lab5_main.c: 60:     T0CON0bits.T016BIT = 0;
+  1302     0067  0020               	movlb	0	; select bank0
+  1303     0068  121E               	bcf	30,4	;volatile
+  1304     0069                     l670:
+  1305                           
+  1306                           ;Lab5_main.c: 62:     T0CON1bits.T0CS = 0b010;
+  1307     0069  081F               	movf	31,w	;volatile
+  1308     006A  391F               	andlw	-225
+  1309     006B  3840               	iorlw	64
+  1310     006C  009F               	movwf	31	;volatile
+  1311                           
+  1312                           ;Lab5_main.c: 64:     T0CON1bits.T0CKPS = 0b110;
+  1313     006D  081F               	movf	31,w	;volatile
+  1314     006E  39F0               	andlw	-16
+  1315     006F  3806               	iorlw	6
+  1316     0070  009F               	movwf	31	;volatile
+  1317     0071                     l26:
+  1318     0071  0008               	return
+  1319     0072                     __end_of_configTIMER:
+  1320                           
+  1321                           	psect	text2
+  1322     007A                     __ptext2:	
+  1323 ;; *************** function _configPIN *****************
+  1324 ;; Defined at:
+  1325 ;;		line 47 in file "Lab5_main.c"
+  1326 ;; Parameters:    Size  Location     Type
+  1327 ;;		None
+  1328 ;; Auto vars:     Size  Location     Type
+  1329 ;;		None
+  1330 ;; Return value:  Size  Location     Type
+  1331 ;;                  1    wreg      void 
+  1332 ;; Registers used:
+  1333 ;;		None
+  1334 ;; Tracked objects:
+  1335 ;;		On entry : 0/0
+  1336 ;;		On exit  : 0/0
+  1337 ;;		Unchanged: 0/0
+  1338 ;; Data sizes:     COMMON   BANK0   BANK1   BANK2   BANK3   BANK4   BANK5   BANK6   BANK7   BANK8   BANK9  BANK10  BANK1
+      +1  BANK12
+  1339 ;;      Params:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1340 ;;      Locals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1341 ;;      Temps:          0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1342 ;;      Totals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1343 ;;Total ram usage:        0 bytes
+  1344 ;; Hardware stack levels used: 1
+  1345 ;; Hardware stack levels required when called: 1
+  1346 ;; This function calls:
+  1347 ;;		Nothing
+  1348 ;; This function is called by:
+  1349 ;;		_main
+  1350 ;; This function uses a non-reentrant model
+  1351 ;;
+  1352                           
+  1353     007A                     _configPIN:	
+  1354                           ;psect for function _configPIN
+  1355                           
+  1356     007A                     l666:	
+  1357                           ;incstack = 0
+  1358                           ; Regs used in _configPIN: []
+  1359                           
+  1360                           
+  1361                           ;Lab5_main.c: 53:     ANSELBbits.ANSB7 = 1;
+  1362     007A  003E               	movlb	30	; select bank30
+  1363     007B  17C3               	bsf	67,7	;volatile
+  1364                           
+  1365                           ;Lab5_main.c: 54:     TRISBbits.TRISB7 = 0;
+  1366     007C  0020               	movlb	0	; select bank0
+  1367     007D  1392               	bcf	18,7	;volatile
+  1368     007E                     l23:
+  1369     007E  0008               	return
+  1370     007F                     __end_of_configPIN:
+  1371                           
+  1372                           	psect	text3
+  1373     007F                     __ptext3:	
+  1374 ;; *************** function _configINT *****************
+  1375 ;; Defined at:
+  1376 ;;		line 67 in file "Lab5_main.c"
+  1377 ;; Parameters:    Size  Location     Type
+  1378 ;;		None
+  1379 ;; Auto vars:     Size  Location     Type
+  1380 ;;		None
+  1381 ;; Return value:  Size  Location     Type
+  1382 ;;                  1    wreg      void 
+  1383 ;; Registers used:
+  1384 ;;		None
+  1385 ;; Tracked objects:
+  1386 ;;		On entry : 0/0
+  1387 ;;		On exit  : 0/0
+  1388 ;;		Unchanged: 0/0
+  1389 ;; Data sizes:     COMMON   BANK0   BANK1   BANK2   BANK3   BANK4   BANK5   BANK6   BANK7   BANK8   BANK9  BANK10  BANK1
+      +1  BANK12
+  1390 ;;      Params:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1391 ;;      Locals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1392 ;;      Temps:          0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1393 ;;      Totals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1394 ;;Total ram usage:        0 bytes
+  1395 ;; Hardware stack levels used: 1
+  1396 ;; Hardware stack levels required when called: 1
+  1397 ;; This function calls:
+  1398 ;;		Nothing
+  1399 ;; This function is called by:
+  1400 ;;		_main
+  1401 ;; This function uses a non-reentrant model
+  1402 ;;
+  1403                           
+  1404     007F                     _configINT:	
+  1405                           ;psect for function _configINT
+  1406                           
+  1407     007F                     l672:	
+  1408                           ;incstack = 0
+  1409                           ; Regs used in _configINT: []
+  1410                           
+  1411                           
+  1412                           ;Lab5_main.c: 69:     INTCONbits.GIE = 1;
+  1413     007F  178B               	bsf	11,7	;volatile
+  1414                           
+  1415                           ;Lab5_main.c: 71:     INTCONbits.PEIE = 1;
+  1416     0080  170B               	bsf	11,6	;volatile
+  1417                           
+  1418                           ;Lab5_main.c: 73:     PIE0bits.TMR0IE = 1;
+  1419     0081  002E               	movlb	14	; select bank14
+  1420     0082  1696               	bsf	22,5	;volatile
+  1421     0083                     l29:
+  1422     0083  0008               	return
+  1423     0084                     __end_of_configINT:
+  1424                           
+  1425                           	psect	text4
+  1426     0072                     __ptext4:	
+  1427 ;; *************** function _configDAC *****************
+  1428 ;; Defined at:
+  1429 ;;		line 76 in file "Lab5_main.c"
+  1430 ;; Parameters:    Size  Location     Type
+  1431 ;;		None
+  1432 ;; Auto vars:     Size  Location     Type
+  1433 ;;		None
+  1434 ;; Return value:  Size  Location     Type
+  1435 ;;                  1    wreg      void 
+  1436 ;; Registers used:
+  1437 ;;		wreg, status,2, status,0
+  1438 ;; Tracked objects:
+  1439 ;;		On entry : 0/0
+  1440 ;;		On exit  : 0/0
+  1441 ;;		Unchanged: 0/0
+  1442 ;; Data sizes:     COMMON   BANK0   BANK1   BANK2   BANK3   BANK4   BANK5   BANK6   BANK7   BANK8   BANK9  BANK10  BANK1
+      +1  BANK12
+  1443 ;;      Params:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1444 ;;      Locals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1445 ;;      Temps:          0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1446 ;;      Totals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1447 ;;Total ram usage:        0 bytes
+  1448 ;; Hardware stack levels used: 1
+  1449 ;; Hardware stack levels required when called: 1
+  1450 ;; This function calls:
+  1451 ;;		Nothing
+  1452 ;; This function is called by:
+  1453 ;;		_main
+  1454 ;; This function uses a non-reentrant model
+  1455 ;;
+  1456                           
+  1457     0072                     _configDAC:	
+  1458                           ;psect for function _configDAC
+  1459                           
+  1460     0072                     l674:	
+  1461                           ;incstack = 0
+  1462                           ; Regs used in _configDAC: [wreg+status,2+status,0]
+  1463                           
+  1464                           
+  1465                           ;Lab5_main.c: 78:     DAC1CON0bits.DAC1OE1 = 1;
+  1466     0072  0032               	movlb	18	; select bank18
+  1467     0073  168E               	bsf	14,5	;volatile
+  1468                           
+  1469                           ;Lab5_main.c: 79:     DAC1CON0bits.DAC1OE2 = 1;
+  1470     0074  160E               	bsf	14,4	;volatile
+  1471     0075                     l676:
+  1472                           
+  1473                           ;Lab5_main.c: 82:     DAC1CON0bits.PSS = 00;
+  1474     0075  30F3               	movlw	-13
+  1475     0076  058E               	andwf	14,f	;volatile
+  1476     0077                     l678:
+  1477                           
+  1478                           ;Lab5_main.c: 83:     DAC1CON0bits.NSS = 0;
+  1479     0077  100E               	bcf	14,0	;volatile
+  1480     0078                     l680:
+  1481                           
+  1482                           ;Lab5_main.c: 86:     DAC1CON0bits.DAC1EN = 1;
+  1483     0078  178E               	bsf	14,7	;volatile
+  1484     0079                     l32:
+  1485     0079  0008               	return
+  1486     007A                     __end_of_configDAC:
+  1487                           
+  1488                           	psect	intentry
+  1489     0004                     __pintentry:	
+  1490 ;; *************** function _TIMER0 *****************
+  1491 ;; Defined at:
+  1492 ;;		line 106 in file "Lab5_main.c"
+  1493 ;; Parameters:    Size  Location     Type
+  1494 ;;		None
+  1495 ;; Auto vars:     Size  Location     Type
+  1496 ;;		None
+  1497 ;; Return value:  Size  Location     Type
+  1498 ;;                  1    wreg      void 
+  1499 ;; Registers used:
+  1500 ;;		wreg, status,2, status,0
+  1501 ;; Tracked objects:
+  1502 ;;		On entry : 0/0
+  1503 ;;		On exit  : 0/0
+  1504 ;;		Unchanged: 0/0
+  1505 ;; Data sizes:     COMMON   BANK0   BANK1   BANK2   BANK3   BANK4   BANK5   BANK6   BANK7   BANK8   BANK9  BANK10  BANK1
+      +1  BANK12
+  1506 ;;      Params:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1507 ;;      Locals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1508 ;;      Temps:          0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1509 ;;      Totals:         0       0       0       0       0       0       0       0       0       0       0       0       
+      +0       0
+  1510 ;;Total ram usage:        0 bytes
+  1511 ;; Hardware stack levels used: 1
+  1512 ;; This function calls:
+  1513 ;;		Nothing
+  1514 ;; This function is called by:
+  1515 ;;		Interrupt level 1
+  1516 ;; This function uses a non-reentrant model
+  1517 ;;
+  1518                           
+  1519     0004                     _TIMER0:
+  1520                           
+  1521                           ;incstack = 0
+  1522     0004  147E               	bsf	int$flags,0	;set compiler interrupt flag (level 1)
+  1523                           
+  1524                           ; Regs used in _TIMER0: [wreg+status,2+status,0]
+  1525     0005  3180               	pagesel	$
+  1526     0006                     i1l692:
+  1527                           
+  1528                           ;Lab5_main.c: 107:     if(PIR0bits.TMR0IF == 1){
+  1529     0006  002E               	movlb	14	; select bank14
+  1530     0007  1E8C               	btfss	12,5	;volatile
+  1531     0008  280A               	goto	u1_21
+  1532     0009  280B               	goto	u1_20
+  1533     000A                     u1_21:
+  1534     000A  2843               	goto	i1l56
+  1535     000B                     u1_20:
+  1536     000B                     i1l694:
+  1537                           
+  1538                           ;Lab5_main.c: 108:         if(IN == 0){
+  1539     000B  0870               	movf	_IN,w
+  1540     000C  0471               	iorwf	_IN+1,w
+  1541     000D  1D03               	btfss	3,2
+  1542     000E  2810               	goto	u2_21
+  1543     000F  2811               	goto	u2_20
+  1544     0010                     u2_21:
+  1545     0010  2827               	goto	i1l704
+  1546     0011                     u2_20:
+  1547     0011                     i1l696:
+  1548                           
+  1549                           ;Lab5_main.c: 109:             if(LED != 8){
+  1550     0011  3008               	movlw	8
+  1551     0012  0672               	xorwf	_LED,w
+  1552     0013  0473               	iorwf	_LED+1,w
+  1553     0014  1903               	btfsc	3,2
+  1554     0015  2817               	goto	u3_21
+  1555     0016  2818               	goto	u3_20
+  1556     0017                     u3_21:
+  1557     0017  281D               	goto	i1l700
+  1558     0018                     u3_20:
+  1559     0018                     i1l698:
+  1560                           
+  1561                           ;Lab5_main.c: 110:                 LED--;
+  1562     0018  30FF               	movlw	255
+  1563     0019  07F2               	addwf	_LED,f
+  1564     001A  30FF               	movlw	255
+  1565     001B  3DF3               	addwfc	_LED+1,f
+  1566                           
+  1567                           ;Lab5_main.c: 111:             }
+  1568     001C  2821               	goto	i1l702
+  1569     001D                     i1l700:
+  1570                           
+  1571                           ;Lab5_main.c: 113:                 IN = 1;
+  1572     001D  3001               	movlw	1
+  1573     001E  00F0               	movwf	_IN
+  1574     001F  3000               	movlw	0
+  1575     0020  00F1               	movwf	_IN+1
+  1576     0021                     i1l702:
+  1577                           
+  1578                           ;Lab5_main.c: 115:             DAC1CON1bits.DAC1R = LED;
+  1579     0021  0032               	movlb	18	; select bank18
+  1580     0022  080F               	movf	15,w	;volatile
+  1581     0023  0672               	xorwf	_LED,w
+  1582     0024  39E0               	andlw	-32
+  1583     0025  0672               	xorwf	_LED,w
+  1584     0026  008F               	movwf	15	;volatile
+  1585     0027                     i1l704:
+  1586                           
+  1587                           ;Lab5_main.c: 117:         if(IN == 1){
+  1588     0027  0370               	decf	_IN,w
+  1589     0028  0471               	iorwf	_IN+1,w
+  1590     0029  1D03               	btfss	3,2
+  1591     002A  282C               	goto	u4_21
+  1592     002B  282D               	goto	u4_20
+  1593     002C                     u4_21:
+  1594     002C  2841               	goto	i1l714
+  1595     002D                     u4_20:
+  1596     002D                     i1l706:
+  1597                           
+  1598                           ;Lab5_main.c: 118:             if(LED != 31){
+  1599     002D  301F               	movlw	31
+  1600     002E  0672               	xorwf	_LED,w
+  1601     002F  0473               	iorwf	_LED+1,w
+  1602     0030  1903               	btfsc	3,2
+  1603     0031  2833               	goto	u5_21
+  1604     0032  2834               	goto	u5_20
+  1605     0033                     u5_21:
+  1606     0033  2839               	goto	i1l710
+  1607     0034                     u5_20:
+  1608     0034                     i1l708:
+  1609                           
+  1610                           ;Lab5_main.c: 119:                 LED++;
+  1611     0034  3001               	movlw	1
+  1612     0035  07F2               	addwf	_LED,f
+  1613     0036  3000               	movlw	0
+  1614     0037  3DF3               	addwfc	_LED+1,f
+  1615                           
+  1616                           ;Lab5_main.c: 120:             }
+  1617     0038  283B               	goto	i1l712
+  1618     0039                     i1l710:
+  1619                           
+  1620                           ;Lab5_main.c: 122:                 IN = 0;
+  1621     0039  01F0               	clrf	_IN
+  1622     003A  01F1               	clrf	_IN+1
+  1623     003B                     i1l712:
+  1624                           
+  1625                           ;Lab5_main.c: 124:             DAC1CON1bits.DAC1R = LED;
+  1626     003B  0032               	movlb	18	; select bank18
+  1627     003C  080F               	movf	15,w	;volatile
+  1628     003D  0672               	xorwf	_LED,w
+  1629     003E  39E0               	andlw	-32
+  1630     003F  0672               	xorwf	_LED,w
+  1631     0040  008F               	movwf	15	;volatile
+  1632     0041                     i1l714:
+  1633                           
+  1634                           ;Lab5_main.c: 127:         PIR0bits.TMR0IF = 0;
+  1635     0041  002E               	movlb	14	; select bank14
+  1636     0042  128C               	bcf	12,5	;volatile
+  1637     0043                     i1l56:
+  1638     0043  107E               	bcf	int$flags,0	;clear compiler interrupt flag (level 1)
+  1639     0044  0009               	retfie
+  1640     0045                     __end_of_TIMER0:
+  1641     0002                     ___latbits      equ	2
+  1642     007E                     btemp           set	126	;btemp
+  1643     007E                     int$flags       set	126
+  1644     007E                     wtemp0          set	126
+  1645                           
+  1646                           	psect	config
+  1647                           
+  1648                           ;Config register CONFIG1 @ 0x8007
+  1649                           ;	External Oscillator mode selection bits
+  1650                           ;	FEXTOSC = ECH, EC above 8MHz; PFM set to high power
+  1651                           ;	Power-up default value for COSC bits
+  1652                           ;	RSTOSC = HFINT1, HFINTOSC (1MHz)
+  1653                           ;	Clock Out Enable bit
+  1654                           ;	CLKOUTEN = OFF, CLKOUT function is disabled; i/o or oscillator function on OSC2
+  1655                           ;	Clock Switch Enable bit
+  1656                           ;	CSWEN = ON, Writing to NOSC and NDIV is allowed
+  1657                           ;	Fail-Safe Clock Monitor Enable bit
+  1658                           ;	FCMEN = ON, FSCM timer enabled
+  1659     8007                     	org	32775
+  1660     8007  3FEF               	dw	16367
+  1661                           
+  1662                           ;Config register CONFIG2 @ 0x8008
+  1663                           ;	Master Clear Enable bit
+  1664                           ;	MCLRE = ON, MCLR pin is Master Clear function
+  1665                           ;	Power-up Timer Enable bit
+  1666                           ;	PWRTE = OFF, PWRT disabled
+  1667                           ;	Low-Power BOR enable bit
+  1668                           ;	LPBOREN = OFF, ULPBOR disabled
+  1669                           ;	Brown-out reset enable bits
+  1670                           ;	BOREN = ON, Brown-out Reset Enabled, SBOREN bit is ignored
+  1671                           ;	Brown-out Reset Voltage Selection
+  1672                           ;	BORV = LO, Brown-out Reset Voltage (VBOR) set to 1.9V on LF, and 2.45V on F Devices
+  1673                           ;	Zero-cross detect disable
+  1674                           ;	ZCD = OFF, Zero-cross detect circuit is disabled at POR.
+  1675                           ;	Peripheral Pin Select one-way control
+  1676                           ;	PPS1WAY = ON, The PPSLOCK bit can be cleared and set only once in software
+  1677                           ;	Stack Overflow/Underflow Reset Enable bit
+  1678                           ;	STVREN = ON, Stack Overflow or Underflow will cause a reset
+  1679                           ;	Background Debugger
+  1680                           ;	DEBUG = 0x1, unprogrammed default
+  1681     8008                     	org	32776
+  1682     8008  3FFF               	dw	16383
+  1683                           
+  1684                           ;Config register CONFIG3 @ 0x8009
+  1685                           ;	WDT Period Select bits
+  1686                           ;	WDTCPS = WDTCPS_31, Divider ratio 1:65536; software control of WDTPS
+  1687                           ;	WDT operating mode
+  1688                           ;	WDTE = OFF, WDT Disabled, SWDTEN is ignored
+  1689                           ;	WDT Window Select bits
+  1690                           ;	WDTCWS = WDTCWS_7, window always open (100%); software control; keyed access not requi
+      +                          red
+  1691                           ;	WDT input clock selector
+  1692                           ;	WDTCCS = SC, Software Control
+  1693     8009                     	org	32777
+  1694     8009  3F9F               	dw	16287
+  1695                           
+  1696                           ;Config register CONFIG4 @ 0x800A
+  1697                           ;	UserNVM self-write protection bits
+  1698                           ;	WRT = OFF, Write protection off
+  1699                           ;	Scanner Enable bit
+  1700                           ;	SCANE = available, Scanner module is available for use
+  1701                           ;	Low Voltage Programming Enable bit
+  1702                           ;	LVP = ON, Low Voltage programming enabled. MCLR/Vpp pin function is MCLR.
+  1703     800A                     	org	32778
+  1704     800A  3FFF               	dw	16383
+  1705                           
+  1706                           ;Config register CONFIG5 @ 0x800B
+  1707                           ;	UserNVM Program memory code protection bit
+  1708                           ;	CP = OFF, Program Memory code protection disabled
+  1709                           ;	DataNVM code protection bit
+  1710                           ;	CPD = OFF, Data EEPROM code protection disabled
+  1711     800B                     	org	32779
+  1712     800B  3FFF               	dw	16383
+
+Data Sizes:
+    Strings     0
+    Constant    0
+    Data        2
+    BSS         2
+    Persistent  32
+    Stack       0
+
+Auto Spaces:
+    Space          Size  Autos    Used
+    COMMON           14      0       4
+    BANK0            80      0       0
+    BANK1            80      0       0
+    BANK2            80      0       0
+    BANK3            80      0       0
+    BANK4            80      0       0
+    BANK5            80      0       0
+    BANK6            80      0       0
+    BANK7            80      0       0
+    BANK8            80      0       0
+    BANK9            80      0       0
+    BANK10           80      0       0
+    BANK11           80      0       0
+    BANK12           48      0       0
+
+Pointer List with Targets:
+
+    None.
+
+Critical Paths under _main in COMMON
+
+    None.
+
+Critical Paths under _TIMER0 in COMMON
+
+    None.
+
+Critical Paths under _main in BANK0
+
+    None.
+
+Critical Paths under _TIMER0 in BANK0
+
+    None.
+
+Critical Paths under _main in BANK1
+
+    None.
+
+Critical Paths under _TIMER0 in BANK1
+
+    None.
+
+Critical Paths under _main in BANK2
+
+    None.
+
+Critical Paths under _TIMER0 in BANK2
+
+    None.
+
+Critical Paths under _main in BANK3
+
+    None.
+
+Critical Paths under _TIMER0 in BANK3
+
+    None.
+
+Critical Paths under _main in BANK4
+
+    None.
+
+Critical Paths under _TIMER0 in BANK4
+
+    None.
+
+Critical Paths under _main in BANK5
+
+    None.
+
+Critical Paths under _TIMER0 in BANK5
+
+    None.
+
+Critical Paths under _main in BANK6
+
+    None.
+
+Critical Paths under _TIMER0 in BANK6
+
+    None.
+
+Critical Paths under _main in BANK7
+
+    None.
+
+Critical Paths under _TIMER0 in BANK7
+
+    None.
+
+Critical Paths under _main in BANK8
+
+    None.
+
+Critical Paths under _TIMER0 in BANK8
+
+    None.
+
+Critical Paths under _main in BANK9
+
+    None.
+
+Critical Paths under _TIMER0 in BANK9
+
+    None.
+
+Critical Paths under _main in BANK10
+
+    None.
+
+Critical Paths under _TIMER0 in BANK10
+
+    None.
+
+Critical Paths under _main in BANK11
+
+    None.
+
+Critical Paths under _TIMER0 in BANK11
+
+    None.
+
+Critical Paths under _main in BANK12
+
+    None.
+
+Critical Paths under _TIMER0 in BANK12
+
+    None.
+
+Call Graph Tables:
+
+ ---------------------------------------------------------------------------------
+ (Depth) Function   	        Calls       Base Space   Used Autos Params    Refs
+ ---------------------------------------------------------------------------------
+ (0) _main                                                 0     0      0       0
+                          _configDAC
+                          _configINT
+                          _configPIN
+                        _configTIMER
+ ---------------------------------------------------------------------------------
+ (1) _configTIMER                                          0     0      0       0
+ ---------------------------------------------------------------------------------
+ (1) _configPIN                                            0     0      0       0
+ ---------------------------------------------------------------------------------
+ (1) _configINT                                            0     0      0       0
+ ---------------------------------------------------------------------------------
+ (1) _configDAC                                            0     0      0       0
+ ---------------------------------------------------------------------------------
+ Estimated maximum stack depth 1
+ ---------------------------------------------------------------------------------
+ (Depth) Function   	        Calls       Base Space   Used Autos Params    Refs
+ ---------------------------------------------------------------------------------
+ (2) _TIMER0                                               0     0      0       0
+ ---------------------------------------------------------------------------------
+ Estimated maximum stack depth 2
+ ---------------------------------------------------------------------------------
+
+ Call Graph Graphs:
+
+ _main (ROOT)
+   _configDAC
+   _configINT
+   _configPIN
+   _configTIMER
+
+ _TIMER0 (ROOT)
+
+Address spaces:
+Name               Size   Autos  Total    Usage
+BITCOMMON           14      0       0      0.0%
+BITBANK0            80      0       0      0.0%
+BITBANK1            80      0       0      0.0%
+BITBANK2            80      0       0      0.0%
+BITBANK3            80      0       0      0.0%
+BITBANK4            80      0       0      0.0%
+BITBANK5            80      0       0      0.0%
+BITBANK6            80      0       0      0.0%
+BITBANK7            80      0       0      0.0%
+BITBANK8            80      0       0      0.0%
+BITBANK9            80      0       0      0.0%
+BITBANK10           80      0       0      0.0%
+BITBANK11           80      0       0      0.0%
+BITBANK12           48      0       0      0.0%
+BIGRAM            1008      0       0      0.0%
+COMMON              14      0       4     28.6%
+BANK0               80      0       0      0.0%
+BANK1               80      0       0      0.0%
+BANK2               80      0       0      0.0%
+BANK3               80      0       0      0.0%
+BANK4               80      0       0      0.0%
+BANK5               80      0       0      0.0%
+BANK6               80      0       0      0.0%
+BANK7               80      0       0      0.0%
+BANK8               80      0       0      0.0%
+BANK9               80      0       0      0.0%
+BANK10              80      0       0      0.0%
+BANK11              80      0       0      0.0%
+BANK12              48      0       0      0.0%
+STACK                0      0       0      0.0%
+DATA                 0      0       4      0.0%
+
+
+Microchip Technology PIC Macro Assembler V3.00 build 20241204225717 
+Symbol Table                                                                                   Tue Feb 11 18:05:42 2025
+
+                     l23 007E                       l32 0079                       l26 0071  
+                     l29 0083                       _IN 0070                      l670 0069  
+                    l680 0078                      l672 007F                      l674 0072  
+                    l666 007A                      l690 0063                      l682 0055  
+                    l676 0075                      l668 0067                      l684 0058  
+                    l678 0077                      l686 005B                      l688 0061  
+                    _LED 0072                     i1l56 0043                     u1_20 000B  
+                   u1_21 000A                     u2_20 0011                     u2_21 0010  
+                   u3_20 0018                     u3_21 0017                     u4_20 002D  
+                   u4_21 002C                     u5_20 0034                     u5_21 0033  
+                   _main 0055                     btemp 007E                     start 0045  
+                  ?_main 0000                    i1l700 001D                    i1l710 0039  
+                  i1l702 0021                    i1l712 003B                    i1l704 0027  
+                  i1l706 002D                    i1l714 0041                    i1l708 0034  
+                  i1l692 0006                    i1l694 000B                    i1l696 0011  
+                  i1l698 0018                    status 0003                    wtemp0 007E  
+        __initialization 0047             __end_of_main 0067                   ??_main 0000  
+                 _TIMER0 0004             __pdataCOMMON 0072  __end_of__initialization 0051  
+         __pcstackCOMMON 0000                  ?_TIMER0 0000               __pmaintext 0055  
+             __pintentry 0004        __end_of_configDAC 007A        __end_of_configINT 0084  
+      __end_of_configPIN 007F                  __ptext1 0067                  __ptext2 007A  
+                __ptext3 007F                  __ptext4 0072     end_of_initialization 0051  
+              _TRISBbits 0012            ??_configTIMER 0000           __end_of_TIMER0 0045  
+          __pidataCOMMON 0084      start_initialization 0047                 ??_TIMER0 0000  
+    __end_of_configTIMER 0072              __pbssCOMMON 0070                ___latbits 0002  
+              _configDAC 0072                _configINT 007F                _configPIN 007A  
+            _configTIMER 0067                 _PIE0bits 0716                 _PIR0bits 070C  
+             ?_configDAC 0000               ?_configINT 0000               ?_configPIN 0000  
+             _ANSELBbits 0F43               _T0CON0bits 001E               _T0CON1bits 001F  
+               int$flags 007E              ??_configDAC 0000              ??_configINT 0000  
+            ??_configPIN 0000               _INTCONbits 000B                 intlevel1 0000  
+           _DAC1CON0bits 090E             _DAC1CON1bits 090F             ?_configTIMER 0000  

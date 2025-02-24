@@ -252,7 +252,6 @@ int main(void) {
     fractional comSqMag[FFT_SIZE]; //Array for the magnitude of the FFT output
     uint16_t maxFreq = 0;
     
-    
     //Initializing pins for shift register
     LATBbits.LATB2 = 0;
     LATBbits.LATB0 = 1;
@@ -260,22 +259,24 @@ int main(void) {
     LATBbits.LATB1 = 0;
     
     //Start sound
-    
     sendSound(28, 5);
     _delay(1000,100);
     sendSound(28, 5);
     _delay(1000,100);
     sendSound(35, 5);
+    
     //Initialize twiddle factors 
     TwidFactorInit(8, &twidFactors[0], 0);
     while(1){
         //1- If pin B15 = 1, begin FFT and sampling process
         if(PORTBbits.RB15 == 1){ 
-        //2- Begin sampling
+            //Begin Fast Fourier Transform Algorythm
             LATBbits.LATB12 = 0;
             LATBbits.LATB14 = 1; //turning on indicator LED
             counter = 0; //initializing counter before fft
             psamp = &sample[0]; //initializing pointer before fft
+            
+            //2- Begin sampling
             AD1CON1bits.ADON = 1; //Turn on ADC module
             
 
@@ -285,15 +286,16 @@ int main(void) {
             
             _delay(10000,1000);
             counter = 0;
-            //3- Verify sample does not hit 0b0000000000000000 or 0b111111111111 (Clipping)
+            //3- Verify sample does not hit 0b0000000000100000 or below(Clipping)
             for(int i=0;i<256;i++){
                 if(sample[i].real < 0x20){
                    counter++; 
                 }    
             }
             if(counter > 25){
+                //Sample failed clipping test
                 LATBbits.LATB13 = 1;
-                _delay(100,10000);
+                _delay(100,10000);  //Playing clipping error sound
                 sendSound(20, 5);
                 _delay(1000,100);
                 sendSound(20, 5);
@@ -303,11 +305,10 @@ int main(void) {
                 LATBbits.LATB12 = 1;
             }
             else{
-                //4- If sample has passed QA, flash LED and begin FFT sequence
+                //Sample passed clipping test
 
                 //*****FFT Begins*****
                 //5- Run FFT 
-
                 FFTComplexIP(8, &sample[0], &twidFactors[0], 0xFF00); 
 
                 //6- Perform bit reversal on the data
@@ -317,14 +318,7 @@ int main(void) {
                 SquareMagnitudeCplx(256, &sample[0], &comSqMag[0]);
 
                 //8- Determine the dominant frequency
-                maxFreq = 0;
                 uint8_t loc;
-                for(int i=128; i<=255; i++){
-                    if(comSqMag[i] > maxFreq){
-                        maxFreq = comSqMag[i];
-                        loc = i;
-                    }
-                }
                 maxFreq = 0;
                 for(int i=3; i<=127; i++){
                     if(comSqMag[i] > maxFreq){
@@ -332,13 +326,13 @@ int main(void) {
                         loc = i;
                     }
                 }
-                sendData(loc);
-                sendData((loc*31.25)/256);
-                sendData((loc*31.25));
+                sendData(loc); //Transmitting bin number
+                sendData((loc*31.25)/256); //Transmitting upper half of the dominant frequency
+                sendData((loc*31.25)); //Transmitting lower half of the dominant frequency
                 LATBbits.LATB14 = 0; //Turning off indicator, sampling is finished.
-                LATBbits.LATB12 = 1;
-                regWrite(loc);
-                sendSound(loc, 20);
+                regWrite(loc); //Writing bin number to LEDs
+                sendSound(loc, 20); //Playing dominant frequency on piezo
+                LATBbits.LATB12 = 1; //Turning on ready indicator LED
             }
         }
     }
@@ -355,7 +349,7 @@ void __attribute__((interrupt, auto_psv)) _AD1Interrupt(void)
     LATAbits.LATA1 = 1;
     if(counter == 255){
         //Turning off ADC
-        AD1CON1bits.ADON = 0; 
+        AD1CON1bits.ADON = 0;     
         //Capturing last result
         psamp->real = ADC1BUF0;
         //Disabling ADC temporarily       
