@@ -168,7 +168,7 @@ section                    address   length (PC units)   length (bytes) (dec)
 
 section                    address      alignment gaps    total length  (dec)
 -------                    -------      --------------    -------------------
-_0000000005A09D2067e003b6    0x1800                   0           0x400  (1024)
+_0000000005A09D2067e00de2    0x1800                   0           0x400  (1024)
 .ndata                      0x1c00                   0             0x2  (2)
 .nbss                       0x1c02                   0             0x4  (4)
 .data                       0x1c06                   0             0x2  (2)
@@ -520,7 +520,7 @@ __FOSCSEL
 
 __FGS             0x0057fa          0x2
  *(__FGS.sec*)
- __FGS.sec        0x0057fa          0x2 /CW/_FGS`Žá
+ __FGS.sec        0x0057fa          0x2 /CW/_FGS Îå
                   0x0057fa                  __FGS.sec
 
 __FUID0
@@ -1799,7 +1799,7 @@ LOAD c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libm-elf.a
 LOAD c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-elf.a
 END GROUP
 OUTPUT(dist/default/production/dsPIC_fft.X.production.elf elf32-pic30)
-LOAD /CW/_FGS`Žá
+LOAD /CW/_FGS Îå
 LOAD default_isr
 LOAD data_init
 
@@ -1875,9 +1875,9 @@ __c30_signature
  __c30_signature
                   0x000779          0x6 c:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(fixsfdi.EP_o)
 
-_0000000005A09D2067e003b6
+_0000000005A09D2067e00de2
                     0x1800        0x400
- _0000000005A09D2067e003b6
+ _0000000005A09D2067e00de2
                     0x1800        0x400 build/default/production/main_fft.o
                     0x1800                  _sample
 

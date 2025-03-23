@@ -385,7 +385,7 @@ int main(void) {
                 //wait here while sampling
             }
             
-            _delay(10000,1000);
+            _delay(1,1000);
             counter = 0;
             //3- Verify sample does not hit 0b0000000000100000 or below(Clipping)
             for(int i=0;i<256;i++){
