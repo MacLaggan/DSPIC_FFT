@@ -105,9 +105,7 @@ void setupADC(){
     AD1CON4bits.ADDMAEN = 0; //No direct memory access (not required)
     
     AD1CON2bits.SMPI = 0b0000; //Interrupt after every sample and conversion
-    
-    
-    
+
     //Clear ADC interrupt flag
     //Enable ADC interrupt
     //Enable peripheral interrupt (PEIE bit)
@@ -158,11 +156,22 @@ void setupIO(){
     TRISBbits.TRISB13 = 0;
     TRISBbits.TRISB12 = 0;
     
-    TRISAbits.TRISA4 = 0; //Digital output
-    ANSELAbits.ANSA4 = 0; //Pin A4 is piezo speaker
+    TRISBbits.TRISB12 = 0; //Digital output for piezo speaker
     LATAbits.LATA4 = 0;
     
-    LATBbits.LATB12 = 1;    
+    LATBbits.LATB1 = 1;  
+    
+    //<<<<<   TI Handshake pin setup   >>>>>
+    TRISBbits.TRISB2 = 0;
+    TRISBbits.TRISB3 = 0;
+    ANSELBbits.ANSB2 = 0;
+    ANSELBbits.ANSB3 = 0;
+    ODCBbits.ODCB2 = 1;  // Enable open-drain on RB0
+    ODCBbits.ODCB3 = 1;  // Enable open-drain on RB1
+    CNPUBbits.CNPUB2 = 1;  // Enable weak pull-up on RB0 (pin 11)
+    CNPUBbits.CNPUB3 = 1;  // Enable weak pull-up on RB1 (pin 12)
+    
+    
 }
 
 //Write integer to shift register. Must have delay between function calls.
@@ -203,7 +212,7 @@ void setupINT(){
 
 void setupUART(){
     // Set the baud rate (9600 baud for 40 MHz system clock)
-       // Baud rate generator for 9600 baud (Fosc = 40MHz)
+    // Baud rate generator for 9600 baud (Fosc = 40MHz)
 
     // Set UART1 configuration
     U2MODEbits.UARTEN = 0; // Disable UART
@@ -221,20 +230,117 @@ void setupUART(){
 
 void sendData(uint8_t data){
     while (U2STAbits.UTXBF);  // Wait until UART transmit buffer is not full
+    _delay(30,30);
     U2TXREG = data;           // Write data to transmit register
 }
 
 void sendSound(int loc, int time){
     int freq = 24000 / (loc/3); 
     for(int i=0;i<loc*time;i++){
-        LATAbits.LATA4 = 1;
+        LATBbits.LATB12 = 1;
         _delay((int)freq,1);
-        LATAbits.LATA4 = 0;
+        LATBbits.LATB12 = 0;
         _delay((int)freq,1);
     }
-
 }
 
+//<<<<<   TI ASYNCHRONOUS SERIAL   >>>>>
+uint16_t TI_Recieve(){
+    //<<<<<   Local Variable Declaration   >>>>>
+    uint8_t stopBit = 1; // Flag which flips if a stop bit is detected (both lines low)
+    uint16_t message = 0; // Message recieved from other microcontroller
+    uint8_t framingError = 0; // Flag to detect framing error or overrun
+    //<<<<<   Timeout Timer Beginning   >>>>>
+    
+    //<<<<<   Protocal Begins   >>>>>
+    while((PORTBbits.RB2 & PORTBbits.RB3) == 1){    // While both lines are high, wait for communication (waiting till RB0 is low)
+    }
+    // RB0 is low
+    LATBbits.LATB3 = 0;                             // Responding to start with 'ready'  
+    while((PORTBbits.RB2) == 0){                    // Waiting till RB0 is brought high
+    }
+    LATBbits.LATB3 = 1;                             // Releasing ready bit
+    
+    //<<<<<   Data Transfer Beginning   >>>>>
+    while(stopBit & (framingError < 17)){               // Exit loop on stop bit or error
+        while((PORTBbits.RB2 & PORTBbits.RB3) == 1){    // Waitin till a bit is sent
+        }
+        if((PORTBbits.RB2 & PORTBbits.RB3) == 0){       // A stop bit was sent, end transmission
+            stopBit = 0;
+            while((PORTBbits.RB2 | PORTBbits.RB3) == 0){// Waiting till both lines are high
+            }
+            LATBbits.LATB2 = 0;                         // Both are pulled low for "stop bit recieved"
+            LATBbits.LATB3 = 0;
+        }
+        else if(PORTBbits.RB2 == 0){                    // A '0' was sent, a '0' is inserted to the right of lsb (msb first communication)
+            message = (message << 1);
+
+            LATBbits.LATB3 = 0;                         // Pulling RB1 down to signify 'recieved'
+            while(PORTBbits.RB2 == 0){                  // Wait till RB0 is released
+            }
+            LATBbits.LATB3 = 1;                         // Releasing RB1
+            // Bit Recieve Complete!
+        }
+        else{                                           // Otherwise a '1' was sent, message is left shifted and appended a '1'.
+            message = (message << 1) + 1;
+            LATBbits.LATB2 = 0;                         // Pulling RB0 down to signify 'recieved'
+            while(PORTBbits.RB3 == 0){                  // Wait till RB1 is released
+            }
+            LATBbits.LATB2 = 1;                         // Releasing RB0
+            // Bit Recieve Complete!
+        }
+        framingError ++;
+    } 
+    return(message);
+}
+
+void TI_Send(uint16_t message, uint8_t length){
+    //<<<<<   Local Variable Declaration   >>>>>
+    uint8_t bitCounter = 0;                     // Counter which keeps track of bits sent
+    uint8_t bit = 0;                            // individual bit sent
+    uint16_t mask = (1 << (length - 1));
+    mask = 0b1000000000000000;
+    //<<<<<   Protocal Begins   >>>>>
+    //while((PORTBbits.RB2 & PORTBbits.RB3) != 1){ // Ensure both lines are high before continuing
+    //}
+    LATBbits.LATB2 = 0;                         // RB0 is pulled low to signify start bit
+    while(PORTBbits.RB3 == 1){                  // Wait until ready is sent on RB1
+    }                                           
+    LATBbits.LATB2 = 1;                         // Releasing start bit
+    while(PORTBbits.RB3 == 0){                  // Waiting till ready bit is released
+    }
+    
+    //<<<<<   Data Transfer Begin   >>>>>
+    for(bitCounter; bitCounter < length; bitCounter++){
+        if((message & mask) > 0){
+            LATBbits.LATB3 = 0;                 // Sending a '0'
+            while(PORTBbits.RB2 == 1){          // Waiting for response
+            }
+            LATBbits.LATB3 = 1;                 // Releasing RB1
+            while(PORTBbits.RB2 == 0){          // Waiting until other line is released
+            }
+        }
+        else{
+            LATBbits.LATB2 = 0;                 // Sending a '1'
+            while(PORTBbits.RB3 == 1){          // Waiting for response
+            }
+            LATBbits.LATB2 = 1;                 // Releasing RB0
+            while(PORTBbits.RB3 == 0){          // Waiting till other line is released
+            }
+        }
+        message = message << 1;
+    }
+    LATBbits.LATB2 = 0;
+    LATBbits.LATB3 = 0;
+    _delay(300,3);
+    LATBbits.LATB2 = 1;
+    LATBbits.LATB3 = 1;
+    while((PORTBbits.RB2 & PORTBbits.RB3) == 1){// Waiting till both lines are pulled low 
+    }
+    while((PORTBbits.RB2 & PORTBbits.RB3) == 0){// Waiting till both lines are pulled high
+    }
+    // Transmission over
+}
 //========================================
 
 
@@ -246,17 +352,12 @@ int main(void) {
     setupADC();
     setupINT();
     setupUART();
-    
+    LATBbits.LATB2 = 1;
+    LATBbits.LATB3 = 1;
     //Variable declaration
     fractcomplex twidFactors[FFT_SIZE/2] __attribute__((space(xmemory))); //Twiddle factor array stored in x memory
     fractional comSqMag[FFT_SIZE]; //Array for the magnitude of the FFT output
     uint16_t maxFreq = 0;
-    
-    //Initializing pins for shift register
-    LATBbits.LATB2 = 0;
-    LATBbits.LATB0 = 1;
-    LATBbits.LATB2 = 0;
-    LATBbits.LATB1 = 0;
     
     //Start sound
     sendSound(28, 5);
@@ -269,10 +370,10 @@ int main(void) {
     TwidFactorInit(8, &twidFactors[0], 0);
     while(1){
         //1- If pin B15 = 1, begin FFT and sampling process
-        if(PORTBbits.RB15 == 1){ 
+        if(PORTBbits.RB15 == 0){ 
             //Begin Fast Fourier Transform Algorythm
-            LATBbits.LATB12 = 0;
-            LATBbits.LATB14 = 1; //turning on indicator LED
+            LATBbits.LATB1 = 0;
+            LATAbits.LATA1 = 1; //turning on indicator LED
             counter = 0; //initializing counter before fft
             psamp = &sample[0]; //initializing pointer before fft
             
@@ -301,8 +402,11 @@ int main(void) {
                 sendSound(20, 5);
                 _delay(1000,100);
                 LATBbits.LATB13 = 0;
-                LATBbits.LATB14 = 0; //Turning off indicator, sampling is finished.
-                LATBbits.LATB12 = 1;
+                LATAbits.LATA1 = 0; //Turning off indicator, sampling is finished.
+                LATBbits.LATB1 = 1;
+                sendData(99); //Transmitting upper half of the dominant frequency
+                _delay(30,300);
+                sendData(99); //Transmitting lower half of the dominant frequency
             }
             else{
                 //Sample passed clipping test
@@ -326,17 +430,17 @@ int main(void) {
                         loc = i;
                     }
                 }
-                sendData(loc); //Transmitting bin number
-                sendData((loc*31.25)/256); //Transmitting upper half of the dominant frequency
-                sendData((loc*31.25)); //Transmitting lower half of the dominant frequency
-                LATBbits.LATB14 = 0; //Turning off indicator, sampling is finished.
-                regWrite(loc); //Writing bin number to LEDs
+                //sendData(loc); //Transmitting bin number
+                //sendData((loc*31.25)/256); //Transmitting upper half of the dominant frequency
+                //_delay(300,300);
+                //sendData((loc*31.25)); //Transmitting lower half of the dominant frequency
+                TI_Send(loc*31.25, 16);
+                LATAbits.LATA1 = 0; //Turning off indicator, sampling is finished.
                 sendSound(loc, 20); //Playing dominant frequency on piezo
-                LATBbits.LATB12 = 1; //Turning on ready indicator LED
+                LATBbits.LATB1 = 1; //Turning on ready indicator LED
             }
         }
     }
- 
     return(0);
 }
 
@@ -353,8 +457,7 @@ void __attribute__((interrupt, auto_psv)) _AD1Interrupt(void)
         //Capturing last result
         psamp->real = ADC1BUF0;
         //Disabling ADC temporarily       
-        AD1CON1bits.ADON = 0; //Turn off ADC module
-        
+        AD1CON1bits.ADON = 0; //Turn off ADC module    
     }
     else{
         //Capturing result
@@ -362,11 +465,7 @@ void __attribute__((interrupt, auto_psv)) _AD1Interrupt(void)
         //Moving pointer to next element of array (must increase by two to avoid fractcomplex structure)
         psamp++;
         //incrementing sample counter
-        counter++;
-        
-        
+        counter++;  
     }
     IFS0bits.AD1IF = 0;
-    
-    
 }
